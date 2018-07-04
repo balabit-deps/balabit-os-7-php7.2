@@ -1,0 +1,216 @@
+php7.2 (7.2.7-0ubuntu0.18.04.2) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: 7.2.7 did not actually include the fix for the
+    CVE-2018-12882 exif security issue. This release adds backported
+    patches to fix the issue.
+    - debian/patches/CVE-2018-12882-1.patch: fix heap use after free in
+      _php_stream_free in ext/exif/exif.c, ext/exif/tests/bug76409.phpt.
+    - debian/patches/CVE-2018-12882-2.patch: fix test portability in
+      ext/exif/tests/bug76409.phpt.
+    - CVE-2018-12882
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Wed, 04 Jul 2018 12:55:24 -0400
+
+php7.2 (7.2.7-0ubuntu0.18.04.1) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Update to 7.2.7 to fix security issue
+    - CVE-2018-12882
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Tue, 03 Jul 2018 11:16:52 -0400
+
+php7.2 (7.2.5-0ubuntu0.18.04.1) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Update to 7.2.5 to fix security issues
+    - CVE-2018-10545, CVE-2018-10546, CVE-2018-10547, CVE-2018-10548,
+      CVE-2018-10549
+  * d/p/0036-php-5.4.9-fixheader.patch: updated for new version.
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Wed, 09 May 2018 13:21:02 -0400
+
+php7.2 (7.2.3-1ubuntu1) bionic; urgency=medium
+
+  * Merge with Debian unstable (LP: #1744148). Remaining changes:
+    - Drop dh-php from Recommends to Suggests so it can be demoted to
+      universe as it depends on xml2/universe.
+
+ -- Nishanth Aravamudan <nish.aravamudan@canonical.com>  Wed, 14 Mar 2018 15:03:58 -0700
+
+php7.2 (7.2.3-1) unstable; urgency=medium
+
+  * New upstream version 7.2.3
+  * Rebase patches on top of new upstream release.
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 06 Mar 2018 11:15:04 +0000
+
+php7.2 (7.2.2-3) unstable; urgency=medium
+
+  * Add explicit libpcre3 >= 2:8.35 dependency as dh_genshlibs is failing
+    to add versioned dependency for some reason.
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 06 Feb 2018 16:07:40 +0000
+
+php7.2 (7.2.2-2) unstable; urgency=medium
+
+  * Remove explicit libpcre3 dependency and let dh_genshlibs do its magic
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 06 Feb 2018 13:00:04 +0000
+
+php7.2 (7.2.2-1ubuntu2) bionic; urgency=medium
+
+  * No-change rebuild against libcurl4
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Wed, 28 Feb 2018 08:43:55 +0000
+
+php7.2 (7.2.2-1ubuntu1) bionic; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - Drop dh-php from Recommends to Suggests so it can be demoted to
+      universe as it depends on xml2/universe.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Fri, 09 Feb 2018 21:18:55 +0000
+
+php7.2 (7.2.2-1) unstable; urgency=medium
+
+  * New upstream version 7.2.2
+  * Rebase patches on top of new upstream release
+  * Regenerate d/control to finish php7.2-sodium removal
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 01 Feb 2018 15:19:04 +0000
+
+php7.2 (7.2.1-1ubuntu2) bionic; urgency=medium
+
+  * d/control.in: also needs update to keep dh-php in universe.
+
+ -- Nishanth Aravamudan <nish.aravamudan@canonical.com>  Wed, 31 Jan 2018 10:36:35 -0800
+
+php7.2 (7.2.1-1ubuntu1) bionic; urgency=medium
+
+  * Drop dh-php from Recommends to Suggests so it can be demoted to
+    universe (LP #1590623).
+    + dh-php has gained a dependency on xml2 which is in universe. 
+
+ -- Nishanth Aravamudan <nish.aravamudan@canonical.com>  Thu, 25 Jan 2018 11:32:42 -0800
+
+php7.2 (7.2.1-1) unstable; urgency=medium
+
+  * Update the Vcs-* to salsa.d.o
+  * Slightly update debian/copyright (most changes were already in)
+  * New upstream version 7.2.1
+  * Rebase patches on top of new upstream release
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 05 Jan 2018 11:21:04 +0000
+
+php7.2 (7.2.0-2) unstable; urgency=medium
+
+  * Get rid of extra php7.2-sodium module
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 06 Dec 2017 14:15:47 +0000
+
+php7.2 (7.2.0-1) unstable; urgency=low
+
+  * Update PHP 7.2 signing keys
+  * New upstream version 7.2.0
+  * Rebase patches for new upstream release.
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 30 Nov 2017 13:55:57 +0000
+
+php7.2 (7.2.0~rc6-1) unstable; urgency=medium
+
+  * New upstream version 7.2.0~rc6
+  * Rebase patches for new upstream version.
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 12 Nov 2017 03:30:05 +0000
+
+php7.2 (7.2.0~rc5-1) unstable; urgency=medium
+
+  * New upstream version 7.2.0~rc5
+  * Rebase patches for new upstream release
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 27 Oct 2017 13:33:55 +0000
+
+php7.2 (7.2.0~rc4-2) unstable; urgency=medium
+
+  * Fix the usage of internal allocator in xmlrpc extension
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 24 Oct 2017 18:54:46 +0000
+
+php7.2 (7.2.0~rc4-1) unstable; urgency=medium
+
+  * New upstream version 7.2.0~rc4
+  * Rebase patches on top of new upstream version 7.2.0~rc4
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 22 Oct 2017 13:07:11 +0000
+
+php7.2 (7.2.0~rc3-1) unstable; urgency=medium
+
+  * New upstream version 7.2.0~rc3
+  * Refresh patches for PHP 7.2.0~rc3
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 28 Sep 2017 18:26:49 +0200
+
+php7.2 (7.2.0~rc2-1) unstable; urgency=medium
+
+  * New upstream version 7.2.0~rc2
+  * Rebase patches on top of PHP 7.2.0~rc2
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 18 Sep 2017 11:24:14 +0200
+
+php7.2 (7.2.0~rc1-1) unstable; urgency=medium
+
+  * New upstream version 7.2.0~rc1
+  * Rebase patches on top of PHP 7.2.0~rc1
+  * Update d/copyright (License check courtesy of Luca Falavigna)
+  * Rewrap the files in d/ with wrap-and-sort -a
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 31 Aug 2017 14:00:16 +0200
+
+php7.2 (7.2.0~beta3-2) unstable; urgency=medium
+
+  * Enable Argon2 support for password hashing functions
+  * Enable shared libsodium extension
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 25 Aug 2017 11:35:23 +0200
+
+php7.2 (7.2.0~beta3-1) unstable; urgency=medium
+
+  * Allow libgcrypt11-dev when it's not a transitional package
+  * New upstream version 7.2.0~beta3
+  * Refresh patches on top of PHP 7.2.0~beta3
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 18 Aug 2017 15:00:36 +0200
+
+php7.2 (7.2.0~beta2-2) experimental; urgency=medium
+
+  * Update Vcs-* links to https://gitlab.com/deb.sury.org/...
+  * Stop depending on obsolete automake1.11
+  * Switch build-depends to libgcrypt20-dev
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 04 Aug 2017 11:56:09 +0200
+
+php7.2 (7.2.0~beta2-1) experimental; urgency=medium
+
+  * Update d/watch for PHP 7.2
+  * New upstream version 7.2.0~beta2
+  * Rebase patches for PHP 7.2.0~beta2
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 03 Aug 2017 20:42:38 +0200
+
+php7.2 (7.2.0~beta1-1) experimental; urgency=medium
+
+  * New upstream version 7.2.0~beta1
+  * Enable support for libsodium crypto
+  * Rebase patches on top of PHP 7.2.0~beta1
+  * Update phpapi for PHP 7.2 to 20170718
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 27 Jul 2017 13:29:34 +0200
+
+php7.2 (7.2.0~alpha3-1) experimental; urgency=medium
+
+  * New upstream version 7.2.0~alpha3
+  * Rebase patches on top of PHP 7.2.0~alpha3
+  * Update d/rules with configure.in -> configure.ac rename
+  * Remove mcrypt extension that has been removed upstream
+  * Update phpapi to 20160731
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 06 Jul 2017 13:50:44 +0200
+

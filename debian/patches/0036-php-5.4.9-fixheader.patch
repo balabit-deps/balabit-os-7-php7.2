@@ -1,0 +1,22 @@
+From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
+Date: Sat, 2 May 2015 10:26:56 +0200
+Subject: php-5.4.9-fixheader
+
+Make generated php_config.h constant across rebuilds.
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: php-7.2.5/configure.ac
+===================================================================
+--- php-7.2.5.orig/configure.ac	2018-05-09 13:36:15.314325761 -0400
++++ php-7.2.5/configure.ac	2018-05-09 13:36:15.310325758 -0400
+@@ -1310,7 +1310,7 @@ PHP_BUILD_DATE=`date -u +%Y-%m-%d`
+ fi
+ AC_DEFINE_UNQUOTED(PHP_BUILD_DATE,"$PHP_BUILD_DATE",[PHP build date])
+ 
+-PHP_UNAME=`uname -a | xargs`
++PHP_UNAME=`uname | xargs`
+ AC_DEFINE_UNQUOTED(PHP_UNAME,"$PHP_UNAME",[uname -a output])
+ PHP_OS=`uname | xargs`
+ AC_DEFINE_UNQUOTED(PHP_OS,"$PHP_OS",[uname output])
