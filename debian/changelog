@@ -1,3 +1,12 @@
+php7.2 (7.2.10-0ubuntu0.18.04.1) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Update to 7.2.10 to fix security issues
+    - CVE-2015-9253
+    - CVE-2018-14851
+    - CVE-2018-14883
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Thu, 13 Sep 2018 09:45:02 -0400
+
 php7.2 (7.2.7-0ubuntu0.18.04.2) bionic-security; urgency=medium
 
   * SECURITY UPDATE: 7.2.7 did not actually include the fix for the

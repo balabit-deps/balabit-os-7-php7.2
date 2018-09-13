@@ -3666,10 +3666,6 @@ PHPAPI int php_array_merge_recursive(HashTable *dest, HashTable *src) /* {{{ */
 				if (Z_TYPE_P(dest_zval) == IS_NULL) {
 					convert_to_array_ex(dest_zval);
 					add_next_index_null(dest_zval);
-				} else if (Z_TYPE_P(dest_zval) == IS_ARRAY) {
-					if (UNEXPECTED(Z_ARRVAL_P(dest_zval)->nNextFreeElement > (zend_long)Z_ARRVAL_P(dest_zval)->nNumUsed)) {
-						Z_ARRVAL_P(dest_zval)->nNextFreeElement = Z_ARRVAL_P(dest_zval)->nNumUsed;
-					}
 				} else {
 					convert_to_array_ex(dest_zval);
 				}
@@ -3702,7 +3698,7 @@ PHPAPI int php_array_merge_recursive(HashTable *dest, HashTable *src) /* {{{ */
 				zval_add_ref(zv);
 			}
 		} else {
-			zval *zv = zend_hash_next_index_insert_new(dest, src_entry);
+			zval *zv = zend_hash_next_index_insert(dest, src_entry);
 			zval_add_ref(zv);
 		}
 	} ZEND_HASH_FOREACH_END();
@@ -4232,16 +4228,38 @@ PHP_FUNCTION(array_column)
 				zkeyval = array_column_fetch_prop(data, zkey, &rvk);
 			}
 			if (zkeyval) {
-				if (Z_TYPE_P(zkeyval) == IS_STRING) {
-					zend_symtable_update(Z_ARRVAL_P(return_value), Z_STR_P(zkeyval), zcolval);
-				} else if (Z_TYPE_P(zkeyval) == IS_LONG) {
-					add_index_zval(return_value, Z_LVAL_P(zkeyval), zcolval);
-				} else if (Z_TYPE_P(zkeyval) == IS_OBJECT) {
-					zend_string *key = zval_get_string(zkeyval);
-					zend_symtable_update(Z_ARRVAL_P(return_value), key, zcolval);
-					zend_string_release(key);
-				} else {
-					add_next_index_zval(return_value, zcolval);
+				switch (Z_TYPE_P(zkeyval)) {
+					case IS_STRING:
+						zend_symtable_update(Z_ARRVAL_P(return_value), Z_STR_P(zkeyval), zcolval);
+						break;
+					case IS_LONG:
+						zend_hash_index_update(Z_ARRVAL_P(return_value), Z_LVAL_P(zkeyval), zcolval);
+						break;
+					case IS_OBJECT:
+					{
+						zend_string *key = zval_get_string(zkeyval);
+						zend_symtable_update(Z_ARRVAL_P(return_value), key, zcolval);
+						zend_string_release(key);
+						break;
+					}
+					case IS_NULL:
+						zend_hash_update(Z_ARRVAL_P(return_value), ZSTR_EMPTY_ALLOC(), zcolval);
+						break;
+					case IS_DOUBLE:
+						zend_hash_index_update(Z_ARRVAL_P(return_value), zend_dval_to_lval(Z_DVAL_P(zkeyval)), zcolval);
+						break;
+					case IS_TRUE:
+						zend_hash_index_update(Z_ARRVAL_P(return_value), 1, zcolval);
+						break;
+					case IS_FALSE:
+						zend_hash_index_update(Z_ARRVAL_P(return_value), 0, zcolval);
+						break;
+					case IS_RESOURCE:
+						zend_hash_index_update(Z_ARRVAL_P(return_value), Z_RES_HANDLE_P(zkeyval), zcolval);
+						break;
+					default:
+						add_next_index_zval(return_value, zcolval);
+						break;
 				}
 				if (zkeyval == &rvk) {
 					zval_ptr_dtor(&rvk);
@@ -5959,6 +5977,7 @@ PHP_FUNCTION(array_reduce)
 		} else {
 			zval_ptr_dtor(&args[1]);
 			zval_ptr_dtor(&args[0]);
+			zval_ptr_dtor(&result);
 			return;
 		}
 	} ZEND_HASH_FOREACH_END();
