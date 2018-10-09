@@ -73,7 +73,8 @@ Build-Depends: apache2-dev (>= 2.4),
                systemtap-sdt-dev [amd64 i386 powerpc armel armhf ia64],
                tzdata,
                unixodbc-dev,
-               zlib1g-dev
+               zlib1g-dev,
+               oracle-instantclient-lite-dev
 Build-Conflicts: bind-dev,
                  libxmlrpc-core-c3-dev
 Standards-Version: 3.9.7
@@ -430,6 +431,28 @@ Provides: ${php-xml:Provides}
 Recommends: ${php-xml:Recommends}
 Description: DOM, SimpleXML, WDDX, XML, and XSL module for PHP
  This package provides the DOM, SimpleXML, WDDX, XML, and XSL module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php7.2-oci8
+Architecture: any
+Depends: php-common (>= 1:35),
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-oci8:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-oci8:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-oci8:Replaces}
+Breaks: ${php-oci8:Breaks}
+Conflicts: ${php-oci8:Conflicts}
+Provides: ${php-oci8:Provides}
+Description: OCI8 module for PHP
+ This package provides the OCI8 module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited

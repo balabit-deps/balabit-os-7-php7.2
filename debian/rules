@@ -1,10 +1,13 @@
 #!/usr/bin/make -f
 
-# Uncomment this to turn on verbose mode. 
+# Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
+
+# Oracle libs location
+ORACLE_LIBS = /usr/lib/oracle/12.1/client64/lib/
 
 # Enable parallel builds
 PARALLEL=--parallel
@@ -133,7 +136,7 @@ endif
 
 # specify some options to our patch system
 QUILT_DIFF_OPTS := -p
-QUILT_NO_DIFF_TIMESTAMPS := 1 
+QUILT_NO_DIFF_TIMESTAMPS := 1
 export QUILT_DIFF_OPTS QUILT_NO_DIFF_TIMESTAMPS
 
 export PROG_SENDMAIL := /usr/sbin/sendmail
@@ -142,7 +145,7 @@ ifeq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 else
   DEB_CFLAGS_MAINT_APPEND += -O0
 endif
-DEB_CFLAGS_MAINT_APPEND += -Wall -pedantic -fsigned-char -fno-strict-aliasing 
+DEB_CFLAGS_MAINT_APPEND += -Wall -pedantic -fsigned-char -fno-strict-aliasing
 DEB_CFLAGS_MAINT_APPEND += $(shell getconf LFS_CFLAGS)
 
 # Enable IEEE-conformant floating point math on alphas (not the default)
@@ -365,10 +368,11 @@ ifeq (yes,$(RUN_TESTS))
 	    test "$$ext" != "mysqli.so" || continue; \
 	    test "$$ext" != "pdo_mysql.so" || continue; \
 	    test "$$ext" != "wddx.so" || continue; \
+	    test "$$ext" != "oci8.so" || continue; \
 	    extensions="$$extensions -d extension=$$ext"; \
 	done; \
 	[ "$$extensions" ] || { echo "extensions list is empty"; exit 1; }; \
-	env MYSQL_TEST_HOST=127.0.0.1 MYSQL_TEST_PORT=$(MYSQL_PORT) MYSQL_TEST_SOCKET=$(MYSQL_SOCKET) PDO_MYSQL_TEST_HOST=127.0.0.1 PDO_MYSQL_TEST_PORT=$(MYSQL_PORT) PDO_MYSQL_TEST_SOCKET=$(MYSQL_SOCKET) NO_INTERACTION=1 TEST_PHP_CGI_EXECUTABLE=$(CURDIR)/cgi-build/sapi/php-cgi TEST_PHP_EXECUTABLE=$(CURDIR)/cli-build/sapi/cli/php \
+	env LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(ORACLE_LIBS) MYSQL_TEST_HOST=127.0.0.1 MYSQL_TEST_PORT=$(MYSQL_PORT) MYSQL_TEST_SOCKET=$(MYSQL_SOCKET) PDO_MYSQL_TEST_HOST=127.0.0.1 PDO_MYSQL_TEST_PORT=$(MYSQL_PORT) PDO_MYSQL_TEST_SOCKET=$(MYSQL_SOCKET) NO_INTERACTION=1 TEST_PHP_CGI_EXECUTABLE=$(CURDIR)/cgi-build/sapi/php-cgi TEST_PHP_EXECUTABLE=$(CURDIR)/cli-build/sapi/cli/php \
 	$(CURDIR)/cli-build/sapi/cli/php run-tests.php -n -d mysql.default_host=127.0.0.1 -d mysql.default_socket=$(MYSQL_SOCKET) -d mysqli.default_socket=$(MYSQL_SOCKET) -d extension_dir=$(CURDIR)/ext-build/modules/ $$extensions| tee test-results.txt
 	rm -rf temp_session_store
 	@for test in `find . -name '*.log' -a '!' -name 'config.log' -a '!' -name 'bootstrap.log' -a '!' -name 'run.log'`; do \
@@ -538,7 +542,7 @@ override_dh_link:
 	    echo "/usr/share/libtool/build-aux/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh" >> $(PHP_DEV).links; \
 	else \
 	    echo "/usr/share/libtool/config/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh" >> $(PHP_DEV).links; \
-	fi	
+	fi
 	echo "/usr/bin/shtool $(PHPIZE_BUILDDIR)/shtool" >> $(PHP_DEV).links
 	dh_link
 
@@ -570,6 +574,9 @@ override_dh_strip:
 
 override_dh_makeshlibs-arch:
 	dh_makeshlibs -a -p$(PHP_LIBEMBED) -V '$(PHP_LIBEMBED) (>= $(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION))'
+
+override_dh_shlibdeps:
+	dh_shlibdeps -s -l$(ORACLE_LIBS)
 
 override_dh_gencontrol-arch:
 	# Bail-out if PHPAPI has changed
