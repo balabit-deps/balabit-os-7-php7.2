@@ -1,3 +1,9 @@
+php7.2 (7.2.10-0ubuntu0.18.04.1bb1) balabit-os-7.0; urgency=medium
+
+  * added Oracle support
+
+ -- Balazs Benedek <balazs.benedek@balabit.com>  Tue, 09 Oct 2018 12:45:07 +0200
+
 php7.2 (7.2.10-0ubuntu0.18.04.1) bionic-security; urgency=medium
 
   * SECURITY UPDATE: Update to 7.2.10 to fix security issues
