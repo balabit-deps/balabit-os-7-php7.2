@@ -11,11 +11,9 @@ Subject: temporary-path-fixes-for-multiarch
  ext/pdo_dblib/config.m4 |  2 +-
  6 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/acinclude.m4 b/acinclude.m4
-index e0daeb8..43292f2 100644
 --- a/acinclude.m4
 +++ b/acinclude.m4
-@@ -2275,7 +2275,7 @@ AC_DEFUN([PHP_SETUP_KERBEROS],[
+@@ -2278,7 +2278,7 @@ AC_DEFUN([PHP_SETUP_KERBEROS],[
      fi
  
      for i in $PHP_KERBEROS; do
@@ -24,7 +22,7 @@ index e0daeb8..43292f2 100644
          PHP_KERBEROS_DIR=$i
          break
        fi
-@@ -2354,7 +2354,7 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
+@@ -2357,7 +2357,7 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
        if test -r $i/include/openssl/evp.h; then
          OPENSSL_INCDIR=$i/include
        fi
@@ -33,8 +31,6 @@ index e0daeb8..43292f2 100644
          OPENSSL_LIBDIR=$i/$PHP_LIBDIR
        fi
        test -n "$OPENSSL_INCDIR" && test -n "$OPENSSL_LIBDIR" && break
-diff --git a/ext/dba/config.m4 b/ext/dba/config.m4
-index 4ced7d5..a239855 100644
 --- a/ext/dba/config.m4
 +++ b/ext/dba/config.m4
 @@ -273,7 +273,7 @@ AC_DEFUN([PHP_DBA_DB_CHECK],[
@@ -46,8 +42,6 @@ index 4ced7d5..a239855 100644
        lib_found="";
        PHP_TEMP_LDFLAGS(-L$THIS_PREFIX/$PHP_LIBDIR, -l$LIB,[
          AC_TRY_LINK([
-diff --git a/ext/gmp/config.m4 b/ext/gmp/config.m4
-index 22cca7e..0047402 100644
 --- a/ext/gmp/config.m4
 +++ b/ext/gmp/config.m4
 @@ -7,6 +7,7 @@ if test "$PHP_GMP" != "no"; then
@@ -66,8 +60,6 @@ index 22cca7e..0047402 100644
  
    PHP_NEW_EXTENSION(gmp, gmp.c, $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1)
    PHP_SUBST(GMP_SHARED_LIBADD)
-diff --git a/ext/ldap/config.m4 b/ext/ldap/config.m4
-index 1a35c94..2a90b56 100644
 --- a/ext/ldap/config.m4
 +++ b/ext/ldap/config.m4
 @@ -117,16 +117,14 @@ if test "$PHP_LDAP" != "no"; then
@@ -141,11 +133,9 @@ index 1a35c94..2a90b56 100644
       PHP_ADD_LIBRARY_WITH_PATH(clntsh, $LDAP_LIBDIR, LDAP_SHARED_LIBADD)
       AC_DEFINE(HAVE_ORALDAP,1,[ ])
       AC_DEFINE(HAVE_ORALDAP_10,1,[ ])
-diff --git a/ext/pcre/config0.m4 b/ext/pcre/config0.m4
-index 80c8a58..bc60712 100644
 --- a/ext/pcre/config0.m4
 +++ b/ext/pcre/config0.m4
-@@ -23,7 +23,7 @@ PHP_ARG_WITH(pcre-jit,,[  --with-pcre-jit         Enable PCRE JIT functionality
+@@ -23,7 +23,7 @@ PHP_ARG_WITH(pcre-jit,,[  --with-pcre-ji
      AC_MSG_RESULT([$PCRE_INCDIR])
  
      AC_MSG_CHECKING([for PCRE library location])
@@ -153,9 +143,7 @@ index 80c8a58..bc60712 100644
 +    for j in $PHP_PCRE_REGEX $PHP_PCRE_REGEX/$PHP_LIBDIR/$DEB_HOST_MULTIARCH $PHP_PCRE_REGEX/$PHP_LIBDIR; do
        test -f $j/libpcre.a || test -f $j/libpcre.$SHLIB_SUFFIX_NAME && PCRE_LIBDIR=$j
      done
-     
-diff --git a/ext/pdo_dblib/config.m4 b/ext/pdo_dblib/config.m4
-index 407c3fe..17eb11a 100644
+ 
 --- a/ext/pdo_dblib/config.m4
 +++ b/ext/pdo_dblib/config.m4
 @@ -46,7 +46,7 @@ if test "$PHP_PDO_DBLIB" != "no"; then

@@ -1864,7 +1864,7 @@ static int php_openssl_enable_crypto(php_stream *stream,
 
 		do {
 			struct timeval cur_time, elapsed_time;
-			
+
 			if (sslsock->is_client) {
 				n = SSL_connect(sslsock->ssl_handle);
 			} else {
@@ -1874,7 +1874,7 @@ static int php_openssl_enable_crypto(php_stream *stream,
 			if (has_timeout) {
 				gettimeofday(&cur_time, NULL);
 				elapsed_time = php_openssl_subtract_timeval(cur_time, start_time);
-			
+
 				if (php_openssl_compare_timeval( elapsed_time, *timeout) > 0) {
 					php_error_docref(NULL, E_WARNING, "SSL: Handshake timed out");
 					return -1;
@@ -2070,7 +2070,7 @@ static size_t php_openssl_sockop_io(int read, php_stream *stream, char *buf, siz
 				if (errno == EAGAIN && err == SSL_ERROR_WANT_WRITE && read == 0) {
 					retry = 1;
 				}
-				
+
 				/* Also, on reads, we may get this condition on an EOF. We should check properly. */
 				if (read) {
 					stream->eof = (retry == 0 && errno != EAGAIN && !SSL_pending(sslsock->ssl_handle));
@@ -2114,7 +2114,7 @@ static size_t php_openssl_sockop_io(int read, php_stream *stream, char *buf, siz
 				}
 			}
 
-			/* Finally, we keep going until we got data, and an SSL_ERROR_NONE, unless we had an error. */			
+			/* Finally, we keep going until we got data, and an SSL_ERROR_NONE, unless we had an error. */
 		} while (retry);
 
 		/* Tell PHP if we read / wrote bytes. */
@@ -2263,7 +2263,7 @@ static inline int php_openssl_tcp_sockop_accept(php_stream *stream, php_openssl_
 	int clisock;
 	zend_bool nodelay = 0;
 	zval *tmpzval = NULL;
-	
+
 	xparam->outputs.client = NULL;
 
 	if ((tmpzval = php_stream_context_get_option(PHP_STREAM_CONTEXT(stream), "socket", "tcp_nodelay")) != NULL &&
@@ -2405,30 +2405,22 @@ static int php_openssl_sockop_set_option(php_stream *stream, int option, int val
 					alive = 0;
 				} else if (php_pollfd_for(sslsock->s.socket, PHP_POLLREADABLE|POLLPRI, &tv) > 0) {
 					if (sslsock->ssl_active) {
-						int n;
-
-						do {
-							n = SSL_peek(sslsock->ssl_handle, &buf, sizeof(buf));
-							if (n <= 0) {
-								int err = SSL_get_error(sslsock->ssl_handle, n);
-
-								if (err == SSL_ERROR_SYSCALL) {
+						int n = SSL_peek(sslsock->ssl_handle, &buf, sizeof(buf));
+						if (n <= 0) {
+							int err = SSL_get_error(sslsock->ssl_handle, n);
+							switch (err) {
+								case SSL_ERROR_SYSCALL:
 									alive = php_socket_errno() == EAGAIN;
 									break;
-								}
-
-								if (err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE) {
-									/* re-negotiate */
-									continue;
-								}
-
-								/* any other problem is a fatal error */
-								alive = 0;
+								case SSL_ERROR_WANT_READ:
+								case SSL_ERROR_WANT_WRITE:
+									alive = 1;
+									break;
+								default:
+									/* any other problem is a fatal error */
+									alive = 0;
 							}
-							/* either peek succeeded or there was an error; we
-							 * have set the alive flag appropriately */
-							break;
-						} while (1);
+						}
 					} else if (0 == recv(sslsock->s.socket, &buf, sizeof(buf), MSG_PEEK) && php_socket_errno() != EAGAIN) {
 						alive = 0;
 					}

@@ -1,3 +1,11 @@
+php7.2 (7.2.15-0ubuntu0.18.04.1) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Update to 7.2.15 to fix security issues
+    - CVE-2018-19935
+    - CVE-2018-19518
+
+ -- Mike Salvatore <mike.salvatore@canonical.com>  Fri, 08 Feb 2019 09:54:22 -0500
+
 php7.2 (7.2.10-0ubuntu0.18.04.1) bionic-security; urgency=medium
 
   * SECURITY UPDATE: Update to 7.2.10 to fix security issues

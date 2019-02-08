@@ -13,11 +13,9 @@ Subject: debian_quirks
  scripts/phpize.in     |  4 ++--
  8 files changed, 22 insertions(+), 17 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 41b7097..3b580ee 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1078,7 +1078,7 @@ if test "$PHP_CLI" = "no"; then
+@@ -1106,7 +1106,7 @@ if test "$PHP_CLI" = "no"; then
  fi
  
  PHP_ARG_WITH(pear, [whether to install PEAR],
@@ -26,7 +24,7 @@ index 41b7097..3b580ee 100644
    --without-pear          Do not install PEAR], DEFAULT, yes)
  
  if test "$PHP_PEAR" != "no"; then
-@@ -1115,6 +1115,7 @@ dnl
+@@ -1143,6 +1143,7 @@ dnl
    PHP_ADD_MAKEFILE_FRAGMENT($abs_srcdir/pear/Makefile.frag,$abs_srcdir/pear,pear)
  fi
  
@@ -34,7 +32,7 @@ index 41b7097..3b580ee 100644
  
  dnl Configuring Zend and TSRM.
  dnl -------------------------------------------------------------------------
-@@ -1187,6 +1188,8 @@ dnl Build extension directory path
+@@ -1215,6 +1216,8 @@ dnl Build extension directory path
  
  ZEND_MODULE_API_NO=`$EGREP '#define ZEND_MODULE_API_NO ' $srcdir/Zend/zend_modules.h|$SED 's/#define ZEND_MODULE_API_NO //'`
  
@@ -43,7 +41,7 @@ index 41b7097..3b580ee 100644
  if test -z "$EXTENSION_DIR"; then
    extbasedir=$ZEND_MODULE_API_NO
    if test "$oldstyleextdir" = "yes"; then
-@@ -1498,6 +1501,7 @@ $php_shtool mkdir -p scripts/man1
+@@ -1529,6 +1532,7 @@ $php_shtool mkdir -p scripts/man1
  ALL_OUTPUT_FILES="php7.spec main/build-defs.h \
  scripts/phpize scripts/man1/phpize.1 \
  scripts/php-config scripts/man1/php-config.1 \
@@ -51,8 +49,6 @@ index 41b7097..3b580ee 100644
  $PHP_OUTPUT_FILES"
  
  dnl
-diff --git a/ext/ext_skel b/ext/ext_skel
-index d1b8a28..79cd5f6 100755
 --- a/ext/ext_skel
 +++ b/ext/ext_skel
 @@ -70,7 +70,7 @@ if test -d "$extname" ; then
@@ -64,11 +60,9 @@ index d1b8a28..79cd5f6 100755
  fi
  
  ## convert skel_dir to full path
-diff --git a/php.ini-development b/php.ini-development
-index 83ed0fa..24f5f47 100644
 --- a/php.ini-development
 +++ b/php.ini-development
-@@ -704,7 +704,7 @@ default_charset = "UTF-8"
+@@ -706,7 +706,7 @@ default_charset = "UTF-8"
  ;;;;;;;;;;;;;;;;;;;;;;;;;
  
  ; UNIX: "/path1:/path2"
@@ -77,11 +71,9 @@ index 83ed0fa..24f5f47 100644
  ;
  ; Windows: "\path1;\path2"
  ;include_path = ".;c:\php\includes"
-diff --git a/php.ini-production b/php.ini-production
-index a8fb5c9..d3cd4ea 100644
 --- a/php.ini-production
 +++ b/php.ini-production
-@@ -711,7 +711,7 @@ default_charset = "UTF-8"
+@@ -713,7 +713,7 @@ default_charset = "UTF-8"
  ;;;;;;;;;;;;;;;;;;;;;;;;;
  
  ; UNIX: "/path1:/path2"
@@ -90,8 +82,6 @@ index a8fb5c9..d3cd4ea 100644
  ;
  ; Windows: "\path1;\path2"
  ;include_path = ".;c:\php\includes"
-diff --git a/sapi/cli/php.1.in b/sapi/cli/php.1.in
-index 5d82093..1316f1b 100644
 --- a/sapi/cli/php.1.in
 +++ b/sapi/cli/php.1.in
 @@ -365,13 +365,14 @@ Shows configuration for extension
@@ -103,7 +93,7 @@ index 5d82093..1316f1b 100644
  The configuration file for the CLI version of PHP.
  .TP
 -.B php.ini
--The standard configuration file will only be used when 
+-The standard configuration file will only be used when
 -.B php\-cli.ini
 -cannot be found.
 +.B /etc/php/@PHP_MAJOR_VERSION@.@PHP_MINOR_VERSION@/cgi/php.ini
@@ -114,11 +104,9 @@ index 5d82093..1316f1b 100644
  .SH EXAMPLES
  .TP 5
  \fI@program_prefix@php \-r 'echo "Hello World\\n";'\fP
-diff --git a/scripts/Makefile.frag b/scripts/Makefile.frag
-index d3f8bb2..6c432f3 100644
 --- a/scripts/Makefile.frag
 +++ b/scripts/Makefile.frag
-@@ -3,8 +3,8 @@
+@@ -2,8 +2,8 @@
  # Build environment install
  #
  
@@ -129,8 +117,6 @@ index d3f8bb2..6c432f3 100644
  
  BUILD_FILES = \
  	scripts/phpize.m4 \
-diff --git a/scripts/php-config.in b/scripts/php-config.in
-index d6c62cc..fa25dc7 100644
 --- a/scripts/php-config.in
 +++ b/scripts/php-config.in
 @@ -6,11 +6,11 @@ datarootdir="@datarootdir@"
@@ -149,8 +135,6 @@ index d6c62cc..fa25dc7 100644
  man_dir=`eval echo @mandir@`
  program_prefix="@program_prefix@"
  program_suffix="@program_suffix@"
-diff --git a/scripts/phpize.in b/scripts/phpize.in
-index 6302d4e..b652e66 100644
 --- a/scripts/phpize.in
 +++ b/scripts/phpize.in
 @@ -4,8 +4,8 @@

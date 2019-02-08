@@ -678,6 +678,9 @@
 /* Define to 1 if you have the `flock' function. */
 #undef HAVE_FLOCK
 
+/* Struct flock is 64-bit AIX-type */
+#undef HAVE_FLOCK_AIX64
+
 /* Struct flock is BSD-type */
 #undef HAVE_FLOCK_BSD
 
@@ -1539,7 +1542,7 @@
 /* */
 #undef HAVE_RL_CALLBACK_READ_CHAR
 
-/* Define to 1 if you have the `rl_completion_matches' function. */
+/* */
 #undef HAVE_RL_COMPLETION_MATCHES
 
 /* */
@@ -1958,6 +1961,9 @@
 /* Define to 1 if you have the <sys/sysexits.h> header file. */
 #undef HAVE_SYS_SYSEXITS_H
 
+/* Define to 1 if you have the <sys/sysmacros.h> header file. */
+#undef HAVE_SYS_SYSMACROS_H
+
 /* Define to 1 if you have the <sys/times.h> header file. */
 #undef HAVE_SYS_TIMES_H
 
@@ -2139,6 +2145,9 @@
 
 /* */
 #undef HAVE_XMLRPC
+
+/* */
+#undef HAVE_XMLRPC_BUNDLED
 
 /* Define to 1 if you have the <xmltok.h> header file. */
 #undef HAVE_XMLTOK_H
