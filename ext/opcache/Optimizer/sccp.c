@@ -80,7 +80,7 @@ typedef struct _sccp_ctx {
 	zval bot;
 } sccp_ctx;
 
-#define TOP ((zend_uchar)-1) 
+#define TOP ((zend_uchar)-1)
 #define BOT ((zend_uchar)-2)
 #define IS_TOP(zv) (Z_TYPE_P(zv) == TOP)
 #define IS_BOT(zv) (Z_TYPE_P(zv) == BOT)
@@ -585,7 +585,7 @@ static inline int ct_eval_in_array(zval *result, uint32_t extended_value, zval *
 static inline int ct_eval_func_call(
 		zval *result, zend_string *name, uint32_t num_args, zval **args) {
 	uint32_t i;
-	zend_execute_data *execute_data;
+	zend_execute_data *execute_data, *prev_execute_data;
 	zend_function *func;
 	int overflow;
 
@@ -833,12 +833,16 @@ static inline int ct_eval_func_call(
 	}
 
 	func = zend_hash_find_ptr(CG(function_table), name);
-	if (!func || func->type != ZEND_INTERNAL_FUNCTION) {
+	if (!func || func->type != ZEND_INTERNAL_FUNCTION
+			|| func->internal_function.handler == ZEND_FN(display_disabled_function)) {
 		return FAILURE;
 	}
 
 	execute_data = safe_emalloc(num_args, sizeof(zval), ZEND_CALL_FRAME_SLOT * sizeof(zval));
 	memset(execute_data, 0, sizeof(zend_execute_data));
+	prev_execute_data = EG(current_execute_data);
+	EG(current_execute_data) = execute_data;
+
 	EX(func) = func;
 	EX_NUM_ARGS() = num_args;
 	for (i = 0; i < num_args; i++) {
@@ -849,6 +853,7 @@ static inline int ct_eval_func_call(
 		zval_ptr_dtor_nogc(EX_VAR_NUM(i));
 	}
 	efree(execute_data);
+	EG(current_execute_data) = prev_execute_data;
 	return SUCCESS;
 }
 

@@ -3001,7 +3001,7 @@ process_double:
 }
 /* }}} */
 
-/* 
+/*
  * String matching - Sunday algorithm
  * http://www.iti.fh-flensburg.de/lang/algorithmen/pattern/sundayen.htm
  */
@@ -3085,7 +3085,7 @@ ZEND_API const char* ZEND_FASTCALL zend_memnrstr_ex(const char *haystack, const 
 		if (i == needle_len) {
 			return (const char *)p;
 		}
-		
+
 		if (UNEXPECTED(p == haystack)) {
 			return NULL;
 		}
@@ -3108,7 +3108,7 @@ ZEND_API zend_long ZEND_FASTCALL zend_dval_to_lval_slow(double d)
 	if (dmod < 0) {
 		/* we're going to make this number positive; call ceil()
 		 * to simulate rounding towards 0 of the negative number */
-		dmod = ceil(dmod);// + two_pow_32;
+		dmod = ceil(dmod) + two_pow_32;
 	}
 	return (zend_long)(zend_ulong)dmod;
 }

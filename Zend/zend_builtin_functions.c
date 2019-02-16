@@ -484,7 +484,7 @@ ZEND_FUNCTION(func_get_args)
 					q = p;
 					if (EXPECTED(Z_TYPE_INFO_P(q) != IS_UNDEF)) {
 						ZVAL_DEREF(q);
-						if (Z_OPT_REFCOUNTED_P(q)) { 
+						if (Z_OPT_REFCOUNTED_P(q)) {
 							Z_ADDREF_P(q);
 						}
 					} else {
@@ -500,7 +500,7 @@ ZEND_FUNCTION(func_get_args)
 				q = p;
 				if (EXPECTED(Z_TYPE_INFO_P(q) != IS_UNDEF)) {
 					ZVAL_DEREF(q);
-					if (Z_OPT_REFCOUNTED_P(q)) { 
+					if (Z_OPT_REFCOUNTED_P(q)) {
 						Z_ADDREF_P(q);
 					}
 				} else {
@@ -1279,7 +1279,7 @@ ZEND_FUNCTION(method_exists)
 		Z_PARAM_ZVAL(klass)
 		Z_PARAM_STR(method_name)
 	ZEND_PARSE_PARAMETERS_END();
-	
+
 	if (Z_TYPE_P(klass) == IS_OBJECT) {
 		ce = Z_OBJCE_P(klass);
 	} else if (Z_TYPE_P(klass) == IS_STRING) {
@@ -1294,13 +1294,10 @@ ZEND_FUNCTION(method_exists)
 	if (zend_hash_exists(&ce->function_table, lcname)) {
 		zend_string_release(lcname);
 		RETURN_TRUE;
-	} else {
-		union _zend_function *func = NULL;
-
-		if (Z_TYPE_P(klass) == IS_OBJECT
-		&& Z_OBJ_HT_P(klass)->get_method != NULL
-		&& (func = Z_OBJ_HT_P(klass)->get_method(&Z_OBJ_P(klass), method_name, NULL)) != NULL
-		) {
+	} else if (Z_TYPE_P(klass) == IS_OBJECT && Z_OBJ_HT_P(klass)->get_method != NULL) {
+		zend_object *obj = Z_OBJ_P(klass);
+		zend_function *func = Z_OBJ_HT_P(klass)->get_method(&obj, method_name, NULL);
+		if (func != NULL) {
 			if (func->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE) {
 				/* Returns true to the fake Closure's __invoke */
 				RETVAL_BOOL(func->common.scope == zend_ce_closure

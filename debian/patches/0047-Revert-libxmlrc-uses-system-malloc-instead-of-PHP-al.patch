@@ -18,8 +18,6 @@ Subject: Revert "libxmlrc uses system malloc instead of PHP alloc routines"
  ext/xmlrpc/xmlrpc-epi-php.c                 |  6 ++---
  13 files changed, 98 insertions(+), 101 deletions(-)
 
-diff --git a/ext/xmlrpc/libxmlrpc/base64.c b/ext/xmlrpc/libxmlrpc/base64.c
-index dd60dc9..6603b48 100644
 --- a/ext/xmlrpc/libxmlrpc/base64.c
 +++ b/ext/xmlrpc/libxmlrpc/base64.c
 @@ -15,7 +15,6 @@ static const char rcsid[] = "#(@) $Id$";
@@ -39,7 +37,7 @@ index dd60dc9..6603b48 100644
    b->data[0] = 0;
    b->ptr = b->data;
    b->offset = 0;
-@@ -39,14 +38,14 @@ void buffer_add(struct buffer_st *b, char c)
+@@ -39,14 +38,14 @@ void buffer_add(struct buffer_st *b, cha
    b->offset++;
    if (b->offset == b->length) {
      b->length += 512;
@@ -56,8 +54,6 @@ index dd60dc9..6603b48 100644
    b->length = 0;
    b->offset = 0;
    b->ptr = NULL;
-diff --git a/ext/xmlrpc/libxmlrpc/encodings.c b/ext/xmlrpc/libxmlrpc/encodings.c
-index 5777152..ca225a1 100644
 --- a/ext/xmlrpc/libxmlrpc/encodings.c
 +++ b/ext/xmlrpc/libxmlrpc/encodings.c
 @@ -30,8 +30,6 @@
@@ -69,7 +65,7 @@ index 5777152..ca225a1 100644
  static const char rcsid[] = "#(@) $Id$";
  
  #include <errno.h>
-@@ -65,7 +63,7 @@ static char* convert(const char* src, int src_len, int *new_len, const char* fro
+@@ -65,7 +63,7 @@ static char* convert(const char* src, in
        ic = iconv_open(to_enc, from_enc);
        if(ic != (iconv_t)-1) {
           size_t st;
@@ -78,7 +74,7 @@ index 5777152..ca225a1 100644
  
           if(outbuf) {
              out_ptr = (char*)outbuf;
-@@ -76,14 +74,14 @@ static char* convert(const char* src, int src_len, int *new_len, const char* fro
+@@ -76,14 +74,14 @@ static char* convert(const char* src, in
                       int diff = out_ptr - outbuf;
                       outlen += inlenleft;
                       outlenleft += inlenleft;
@@ -95,8 +91,6 @@ index 5777152..ca225a1 100644
                       outbuf = 0;
                       break;
                    }
-diff --git a/ext/xmlrpc/libxmlrpc/queue.c b/ext/xmlrpc/libxmlrpc/queue.c
-index 961b4ca..b7bfa26 100644
 --- a/ext/xmlrpc/libxmlrpc/queue.c
 +++ b/ext/xmlrpc/libxmlrpc/queue.c
 @@ -98,9 +98,9 @@ static const char rcsid[] = "#(@) $Id$";
@@ -110,7 +104,7 @@ index 961b4ca..b7bfa26 100644
  static void QuickSort(void *list[], int low, int high,
                        int (*Comp)(const void *, const void *));
  static int  Q_BSearch(queue *q, void *key,
-@@ -108,8 +108,8 @@ static int  Q_BSearch(queue *q, void *key,
+@@ -108,8 +108,8 @@ static int  Q_BSearch(queue *q, void *ke
  
  /* The index: a pointer to pointers */
  
@@ -166,7 +160,7 @@ index 961b4ca..b7bfa26 100644
  
     if(p) {
        p->next = n;
-@@ -780,20 +780,20 @@ int Q_Sort(queue *q, int (*Comp)(const void *, const void *))
+@@ -780,20 +780,20 @@ int Q_Sort(queue *q, int (*Comp)(const v
     /* if already sorted free memory for tag array */
  
     if(q->sorted) {
@@ -193,7 +187,7 @@ index 961b4ca..b7bfa26 100644
        return False_;
     }
  
-@@ -801,21 +801,21 @@ int Q_Sort(queue *q, int (*Comp)(const void *, const void *))
+@@ -801,21 +801,21 @@ int Q_Sort(queue *q, int (*Comp)(const v
  
     d = Q_Head(q);
     for(i=0; i < q->size; i++) {
@@ -219,7 +213,7 @@ index 961b4ca..b7bfa26 100644
        dn = dn->next;
     }
  
-@@ -857,7 +857,7 @@ static int Q_BSearch( queue *q, void *key,
+@@ -857,7 +857,7 @@ static int Q_BSearch( queue *q, void *ke
  
     while(low <= hi) {
        mid = (low + hi) / 2;
@@ -228,7 +222,7 @@ index 961b4ca..b7bfa26 100644
  
        if(val < 0)
           hi = mid - 1;
-@@ -909,9 +909,9 @@ void *Q_Seek(queue *q, void *data, int (*Comp)(const void *, const void *))
+@@ -909,9 +909,9 @@ void *Q_Seek(queue *q, void *data, int (
     if(idx < 0)
        return NULL;
  
@@ -240,8 +234,6 @@ index 961b4ca..b7bfa26 100644
  }
  
  
-diff --git a/ext/xmlrpc/libxmlrpc/simplestring.c b/ext/xmlrpc/libxmlrpc/simplestring.c
-index fed6b43..585cac0 100644
 --- a/ext/xmlrpc/libxmlrpc/simplestring.c
 +++ b/ext/xmlrpc/libxmlrpc/simplestring.c
 @@ -30,7 +30,6 @@
@@ -261,7 +253,7 @@ index fed6b43..585cac0 100644
  
  /*----------------------**
  * Begin String Functions *
-@@ -113,7 +112,7 @@ void simplestring_init(simplestring* string) {
+@@ -113,7 +112,7 @@ void simplestring_init(simplestring* str
  /******/
  
  static void simplestring_init_str(simplestring* string) {
@@ -270,7 +262,7 @@ index fed6b43..585cac0 100644
     if(string->str) {
        string->str[0] = 0;
        string->len = 0;
-@@ -220,7 +219,7 @@ void simplestring_addn(simplestring* target, const char* source, size_t add_len)
+@@ -220,7 +219,7 @@ void simplestring_addn(simplestring* tar
          	 /* some kind of overflow happened */
          	 return;
           }
@@ -279,8 +271,6 @@ index fed6b43..585cac0 100644
  
           target->size = target->str ? newsize : 0;
        }
-diff --git a/ext/xmlrpc/libxmlrpc/xml_element.c b/ext/xmlrpc/libxmlrpc/xml_element.c
-index 070680d..902e131 100644
 --- a/ext/xmlrpc/libxmlrpc/xml_element.c
 +++ b/ext/xmlrpc/libxmlrpc/xml_element.c
 @@ -127,7 +127,7 @@ static const char rcsid[] = "#(@) $Id$";
@@ -292,7 +282,7 @@ index 070680d..902e131 100644
  
  #define XML_DECL_START                 "<?xml"
  #define XML_DECL_START_LEN             sizeof(XML_DECL_START) - 1
-@@ -204,7 +204,7 @@ void xml_elem_free_non_recurse(xml_element* root) {
+@@ -204,7 +204,7 @@ void xml_elem_free_non_recurse(xml_eleme
        Q_Destroy(&root->children);
        Q_Destroy(&root->attrs);
        if(root->name) {
@@ -310,7 +300,7 @@ index 070680d..902e131 100644
     if(elem) {
        Q_Init(&elem->children);
        Q_Init(&elem->attrs);
-@@ -344,7 +344,7 @@ static char* xml_elem_entity_escape(const char* buf, int old_len, int *newlen, X
+@@ -344,7 +344,7 @@ static char* xml_elem_entity_escape(cons
  
      if(ToBeXmlEscaped) {
  
@@ -319,7 +309,7 @@ index 070680d..902e131 100644
        if(NewBuffer) {
  	bufcopy=buf;
  	while(*bufcopy) {
-@@ -599,15 +599,15 @@ static void _xmlrpc_startElement(void *userData, const char *name, const char **
+@@ -599,15 +599,15 @@ static void _xmlrpc_startElement(void *u
        c = mydata->current;
  
        mydata->current = xml_elem_new();
@@ -339,7 +329,7 @@ index 070680d..902e131 100644
              Q_PushTail(&mydata->current->attrs, attr);
  
              p += 2;
-@@ -643,7 +643,7 @@ static void _xmlrpc_charHandler(void *userData,
+@@ -643,7 +643,7 @@ static void _xmlrpc_charHandler(void *us
           if(add_text) {
              len = new_len;
              simplestring_addn(&mydata->current->text, add_text, len);
@@ -348,11 +338,9 @@ index 070680d..902e131 100644
              return;
           }
        }
-diff --git a/ext/xmlrpc/libxmlrpc/xml_to_dandarpc.c b/ext/xmlrpc/libxmlrpc/xml_to_dandarpc.c
-index 63cc52d..8482117 100644
 --- a/ext/xmlrpc/libxmlrpc/xml_to_dandarpc.c
 +++ b/ext/xmlrpc/libxmlrpc/xml_to_dandarpc.c
-@@ -177,21 +177,21 @@ xml_element* DANDARPC_to_xml_element_worker(XMLRPC_REQUEST request, XMLRPC_VALUE
+@@ -177,21 +177,21 @@ xml_element* DANDARPC_to_xml_element_wor
        xml_element* elem_val = xml_elem_new();
        const char* pAttrType = NULL;
  
@@ -380,7 +368,7 @@ index 63cc52d..8482117 100644
              Q_PushTail(&elem_val->attrs, attr_id);
           }
        }
-@@ -262,7 +262,7 @@ xml_element* DANDARPC_to_xml_element_worker(XMLRPC_REQUEST request, XMLRPC_VALUE
+@@ -262,7 +262,7 @@ xml_element* DANDARPC_to_xml_element_wor
              break;
        }
        if(pAttrType && attr_type && !bNoAddType) {
@@ -389,7 +377,7 @@ index 63cc52d..8482117 100644
        }
        root = elem_val;
     }
-@@ -279,9 +279,9 @@ xml_element* DANDARPC_REQUEST_to_xml_element(XMLRPC_REQUEST request) {
+@@ -279,9 +279,9 @@ xml_element* DANDARPC_REQUEST_to_xml_ele
     if(request) {
        XMLRPC_REQUEST_TYPE request_type = XMLRPC_RequestGetRequestType(request);
        const char* pStr = NULL;
@@ -402,7 +390,7 @@ index 63cc52d..8482117 100644
  
        wrapper = xml_elem_new();
  
-@@ -292,11 +292,11 @@ xml_element* DANDARPC_REQUEST_to_xml_element(XMLRPC_REQUEST request) {
+@@ -292,11 +292,11 @@ xml_element* DANDARPC_REQUEST_to_xml_ele
           pStr = ELEM_METHODCALL;
        }
        if(pStr) {
@@ -416,7 +404,7 @@ index 63cc52d..8482117 100644
        Q_PushTail(&root->attrs, version);
        Q_PushTail(&root->children, wrapper);
  
-@@ -304,7 +304,7 @@ xml_element* DANDARPC_REQUEST_to_xml_element(XMLRPC_REQUEST request) {
+@@ -304,7 +304,7 @@ xml_element* DANDARPC_REQUEST_to_xml_ele
  
        if(pStr) {
           xml_element* method = xml_elem_new();
@@ -425,11 +413,9 @@ index 63cc52d..8482117 100644
           simplestring_add(&method->text, pStr);
           Q_PushTail(&wrapper->children, method);
        }
-diff --git a/ext/xmlrpc/libxmlrpc/xml_to_soap.c b/ext/xmlrpc/libxmlrpc/xml_to_soap.c
-index 64a9a6e..741c953 100644
 --- a/ext/xmlrpc/libxmlrpc/xml_to_soap.c
 +++ b/ext/xmlrpc/libxmlrpc/xml_to_soap.c
-@@ -63,10 +63,10 @@ static inline int is_soap_type(const char* soap_type) {
+@@ -63,10 +63,10 @@ static inline int is_soap_type(const cha
  
  /* utility func to generate a new attribute. possibly should be in xml_element.c?? */
  static xml_element_attr* new_attr(const char* key, const char* val) {
@@ -452,7 +438,7 @@ index 64a9a6e..741c953 100644
  		if (ai) {
  			char buf[128], *p;
  			snprintf(buf, sizeof(buf), "%s", array_type);
-@@ -404,7 +404,7 @@ XMLRPC_VALUE xml_element_to_SOAP_REQUEST_worker(XMLRPC_REQUEST request,
+@@ -404,7 +404,7 @@ XMLRPC_VALUE xml_element_to_SOAP_REQUEST
  			}
  			/* cleanup */
  			if (ai) {
@@ -461,7 +447,7 @@ index 64a9a6e..741c953 100644
  			}
  		}
  	}
-@@ -560,7 +560,7 @@ xml_element* SOAP_to_xml_element_worker(XMLRPC_REQUEST request, XMLRPC_VALUE nod
+@@ -560,7 +560,7 @@ xml_element* SOAP_to_xml_element_worker(
  				}
  			}
  		}
@@ -470,7 +456,7 @@ index 64a9a6e..741c953 100644
  
  		/* cleanup */
  		if (bFreeNode) {
-@@ -582,7 +582,7 @@ xml_element* SOAP_REQUEST_to_xml_element(XMLRPC_REQUEST request) {
+@@ -582,7 +582,7 @@ xml_element* SOAP_REQUEST_to_xml_element
  	/* safety first. */
  	if (root) {
  		xml_element* body = xml_elem_new();
@@ -479,7 +465,7 @@ index 64a9a6e..741c953 100644
  
  		/* silly namespace stuff */
  		Q_PushTail(&root->attrs, new_attr("xmlns:SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/"));
-@@ -617,7 +617,7 @@ xml_element* SOAP_REQUEST_to_xml_element(XMLRPC_REQUEST request) {
+@@ -617,7 +617,7 @@ xml_element* SOAP_REQUEST_to_xml_element
  					/* if we are making a request, we want to use the methodname as is. */
  					if (rtype == xmlrpc_request_call) {
  						if (methodname) {
@@ -488,7 +474,7 @@ index 64a9a6e..741c953 100644
  						}
  					}
  					/* if it's a response, we append "Response". Also, given xmlrpc-epi
-@@ -629,7 +629,7 @@ xml_element* SOAP_REQUEST_to_xml_element(XMLRPC_REQUEST request) {
+@@ -629,7 +629,7 @@ xml_element* SOAP_REQUEST_to_xml_element
  									methodname ? methodname : "",
  									"Response");
  
@@ -497,7 +483,7 @@ index 64a9a6e..741c953 100644
  					}
  
  					/* add serialized data to method call/response.
-@@ -657,7 +657,7 @@ xml_element* SOAP_REQUEST_to_xml_element(XMLRPC_REQUEST request) {
+@@ -657,7 +657,7 @@ xml_element* SOAP_REQUEST_to_xml_element
  					}
  				}
  			}
@@ -506,11 +492,9 @@ index 64a9a6e..741c953 100644
  			Q_PushTail(&root->children, body);
  		}
  	}
-diff --git a/ext/xmlrpc/libxmlrpc/xml_to_xmlrpc.c b/ext/xmlrpc/libxmlrpc/xml_to_xmlrpc.c
-index 309f0dc..d655a71 100644
 --- a/ext/xmlrpc/libxmlrpc/xml_to_xmlrpc.c
 +++ b/ext/xmlrpc/libxmlrpc/xml_to_xmlrpc.c
-@@ -204,40 +204,40 @@ xml_element* XMLRPC_to_xml_element_worker(XMLRPC_VALUE current_vector, XMLRPC_VA
+@@ -204,40 +204,40 @@ xml_element* XMLRPC_to_xml_element_worke
           if (next_el) {
              Q_PushTail(&elem_val->children, next_el);
           }
@@ -558,7 +542,7 @@ index 309f0dc..d655a71 100644
                 base64_encode_xmlrpc(&buf, XMLRPC_GetValueBase64(node), XMLRPC_GetValueStringLen(node));
                 simplestring_addn(&elem_val->text, buf.data, buf.offset );
                 buffer_delete(&buf);
-@@ -253,7 +253,7 @@ xml_element* XMLRPC_to_xml_element_worker(XMLRPC_VALUE current_vector, XMLRPC_VA
+@@ -253,7 +253,7 @@ xml_element* XMLRPC_to_xml_element_worke
                 case xmlrpc_vector_array:
                    {
                        if(depth == 0) {
@@ -567,7 +551,7 @@ index 309f0dc..d655a71 100644
                        }
                        else {
                           /* Hi my name is Dave and I like to make things as confusing
-@@ -265,9 +265,9 @@ xml_element* XMLRPC_to_xml_element_worker(XMLRPC_VALUE current_vector, XMLRPC_VA
+@@ -265,9 +265,9 @@ xml_element* XMLRPC_to_xml_element_worke
                            * GRRRRRRRRR!
                            */
                           xml_element* data = xml_elem_new();
@@ -579,7 +563,7 @@ index 309f0dc..d655a71 100644
                           Q_PushTail(&elem_val->children, data);
                           root_vector_elem = data;
                        }
-@@ -275,7 +275,7 @@ xml_element* XMLRPC_to_xml_element_worker(XMLRPC_VALUE current_vector, XMLRPC_VA
+@@ -275,7 +275,7 @@ xml_element* XMLRPC_to_xml_element_worke
                    break;
                 case xmlrpc_vector_mixed:       /* not officially supported */
                 case xmlrpc_vector_struct:
@@ -588,7 +572,7 @@ index 309f0dc..d655a71 100644
                    break;
                 default:
                    break;
-@@ -301,7 +301,7 @@ xml_element* XMLRPC_to_xml_element_worker(XMLRPC_VALUE current_vector, XMLRPC_VA
+@@ -301,7 +301,7 @@ xml_element* XMLRPC_to_xml_element_worke
  
           if (depth == 1) {
              xml_element* value = xml_elem_new();
@@ -597,7 +581,7 @@ index 309f0dc..d655a71 100644
  
              /* yet another hack for the "fault" crap */
              if (XMLRPC_VectorGetValueWithID(node, ELEM_FAULTCODE)) {
-@@ -309,7 +309,7 @@ xml_element* XMLRPC_to_xml_element_worker(XMLRPC_VALUE current_vector, XMLRPC_VA
+@@ -309,7 +309,7 @@ xml_element* XMLRPC_to_xml_element_worke
  				}
  				else {
                 xml_element* param = xml_elem_new();
@@ -606,7 +590,7 @@ index 309f0dc..d655a71 100644
  
                 Q_PushTail(&param->children, value);
  
-@@ -322,9 +322,9 @@ xml_element* XMLRPC_to_xml_element_worker(XMLRPC_VALUE current_vector, XMLRPC_VA
+@@ -322,9 +322,9 @@ xml_element* XMLRPC_to_xml_element_worke
              xml_element* name = xml_elem_new();
              xml_element* value = xml_elem_new();
  
@@ -619,7 +603,7 @@ index 309f0dc..d655a71 100644
  
              simplestring_add(&name->text, XMLRPC_GetValueID(node));
  
-@@ -337,7 +337,7 @@ xml_element* XMLRPC_to_xml_element_worker(XMLRPC_VALUE current_vector, XMLRPC_VA
+@@ -337,7 +337,7 @@ xml_element* XMLRPC_to_xml_element_worke
  			else if (vtype == xmlrpc_vector_array) {
              xml_element* value = xml_elem_new();
  
@@ -628,7 +612,7 @@ index 309f0dc..d655a71 100644
  
              Q_PushTail(&value->children, elem_val);
  
-@@ -350,7 +350,7 @@ xml_element* XMLRPC_to_xml_element_worker(XMLRPC_VALUE current_vector, XMLRPC_VA
+@@ -350,7 +350,7 @@ xml_element* XMLRPC_to_xml_element_worke
  			else {
              xml_element* value = xml_elem_new();
  
@@ -637,7 +621,7 @@ index 309f0dc..d655a71 100644
  
              Q_PushTail(&value->children, elem_val);
  
-@@ -381,7 +381,7 @@ xml_element* XMLRPC_REQUEST_to_xml_element(XMLRPC_REQUEST request) {
+@@ -381,7 +381,7 @@ xml_element* XMLRPC_REQUEST_to_xml_eleme
           pStr = ELEM_METHODRESPONSE;
        }
        if (pStr) {
@@ -646,7 +630,7 @@ index 309f0dc..d655a71 100644
        }
  
  		if(request_type == xmlrpc_request_call) {
-@@ -389,7 +389,7 @@ xml_element* XMLRPC_REQUEST_to_xml_element(XMLRPC_REQUEST request) {
+@@ -389,7 +389,7 @@ xml_element* XMLRPC_REQUEST_to_xml_eleme
  
        if (pStr) {
           xml_element* method = xml_elem_new();
@@ -655,7 +639,7 @@ index 309f0dc..d655a71 100644
           simplestring_add(&method->text, pStr);
           Q_PushTail(&wrapper->children, method);
        }
-@@ -401,7 +401,7 @@ xml_element* XMLRPC_REQUEST_to_xml_element(XMLRPC_REQUEST request) {
+@@ -401,7 +401,7 @@ xml_element* XMLRPC_REQUEST_to_xml_eleme
  		else {
           /* Despite the spec, the xml-rpc list folk want me to send an empty params element */
           xml_element* params = xml_elem_new();
@@ -664,11 +648,9 @@ index 309f0dc..d655a71 100644
           Q_PushTail(&wrapper->children, params);
        }
     }
-diff --git a/ext/xmlrpc/libxmlrpc/xmlrpc.c b/ext/xmlrpc/libxmlrpc/xmlrpc.c
-index 7a7d9c8..afb3958 100644
 --- a/ext/xmlrpc/libxmlrpc/xmlrpc.c
 +++ b/ext/xmlrpc/libxmlrpc/xmlrpc.c
-@@ -305,7 +305,7 @@ static int date_to_ISO8601 (time_t value, char *buf, int length) {
+@@ -305,7 +305,7 @@ static int date_to_ISO8601 (time_t value
   * SOURCE
   */
  XMLRPC_REQUEST XMLRPC_RequestNew() {
@@ -677,7 +659,7 @@ index 7a7d9c8..afb3958 100644
     if(xRequest) {
        simplestring_init(&xRequest->methodName);
     }
-@@ -858,7 +858,7 @@ XMLRPC_REQUEST XMLRPC_REQUEST_FromXML (const char *in_buf, int len,
+@@ -858,7 +858,7 @@ XMLRPC_REQUEST XMLRPC_REQUEST_FromXML (c
   * SOURCE
   */
  XMLRPC_VALUE XMLRPC_CreateValueEmpty() {
@@ -686,7 +668,7 @@ index 7a7d9c8..afb3958 100644
     if(v) {
  #ifdef XMLRPC_DEBUG_REFCOUNT
  		printf ("calloc'd 0x%x\n", v);
-@@ -1050,9 +1050,9 @@ int XMLRPC_SetIsVector(XMLRPC_VALUE value, XMLRPC_VECTOR_TYPE type) {
+@@ -1050,9 +1050,9 @@ int XMLRPC_SetIsVector(XMLRPC_VALUE valu
  			}
  		}
  		else {
@@ -698,7 +680,7 @@ index 7a7d9c8..afb3958 100644
           if(value->v->q) {
              Q_Init(value->v->q);
              value->v->type = type;
-@@ -2319,7 +2319,7 @@ XMLRPC_VALUE_TYPE_EASY XMLRPC_GetValueTypeEasy (XMLRPC_VALUE value) {
+@@ -2319,7 +2319,7 @@ XMLRPC_VALUE_TYPE_EASY XMLRPC_GetValueTy
   * SOURCE
   */
  XMLRPC_SERVER XMLRPC_ServerCreate() {
@@ -707,7 +689,7 @@ index 7a7d9c8..afb3958 100644
     if(server) {
        Q_Init(&server->methodlist);
        Q_Init(&server->docslist);
-@@ -2389,7 +2389,9 @@ void XMLRPC_ServerDestroy(XMLRPC_SERVER server) {
+@@ -2389,7 +2389,9 @@ void XMLRPC_ServerDestroy(XMLRPC_SERVER
           dm = Q_Next(&server->docslist);
        }
        while( sm ) {
@@ -718,7 +700,7 @@ index 7a7d9c8..afb3958 100644
           if(sm->desc) {
              XMLRPC_CleanupValue(sm->desc);
           }
-@@ -2434,10 +2436,10 @@ void XMLRPC_ServerDestroy(XMLRPC_SERVER server) {
+@@ -2434,10 +2436,10 @@ void XMLRPC_ServerDestroy(XMLRPC_SERVER
  int XMLRPC_ServerRegisterMethod(XMLRPC_SERVER server, const char *name, XMLRPC_Callback cb) {
     if(server && name && cb) {
  
@@ -731,8 +713,6 @@ index 7a7d9c8..afb3958 100644
           sm->method = cb;
           sm->desc = NULL;
  
-diff --git a/ext/xmlrpc/libxmlrpc/xmlrpc.h b/ext/xmlrpc/libxmlrpc/xmlrpc.h
-index 12b6c7a..9b0d934 100644
 --- a/ext/xmlrpc/libxmlrpc/xmlrpc.h
 +++ b/ext/xmlrpc/libxmlrpc/xmlrpc.h
 @@ -36,7 +36,6 @@
@@ -743,11 +723,9 @@ index 12b6c7a..9b0d934 100644
  
  #ifdef __cplusplus
  extern "C" {
-diff --git a/ext/xmlrpc/libxmlrpc/xmlrpc_introspection.c b/ext/xmlrpc/libxmlrpc/xmlrpc_introspection.c
-index c554e73..25d6000 100644
 --- a/ext/xmlrpc/libxmlrpc/xmlrpc_introspection.c
 +++ b/ext/xmlrpc/libxmlrpc/xmlrpc_introspection.c
-@@ -575,7 +575,7 @@ int XMLRPC_ServerRegisterIntrospectionCallback(XMLRPC_SERVER server, XMLRPC_Intr
+@@ -575,7 +575,7 @@ int XMLRPC_ServerRegisterIntrospectionCa
     int bSuccess = 0;
     if(server && cb) {
  
@@ -756,11 +734,9 @@ index c554e73..25d6000 100644
  
        if(dm) {
           dm->method = cb;
-diff --git a/ext/xmlrpc/libxmlrpc/xmlrpc_private.h b/ext/xmlrpc/libxmlrpc/xmlrpc_private.h
-index e43f78e..fbe7104 100644
 --- a/ext/xmlrpc/libxmlrpc/xmlrpc_private.h
 +++ b/ext/xmlrpc/libxmlrpc/xmlrpc_private.h
-@@ -166,7 +166,7 @@ const char* type_to_str(XMLRPC_VALUE_TYPE type, XMLRPC_VECTOR_TYPE vtype);
+@@ -166,7 +166,7 @@ const char* type_to_str(XMLRPC_VALUE_TYP
  /*----------------------------------------------------------------------------
   * Macros
   */
@@ -769,34 +745,41 @@ index e43f78e..fbe7104 100644
  
  
  #ifdef __cplusplus
-diff --git a/ext/xmlrpc/xmlrpc-epi-php.c b/ext/xmlrpc/xmlrpc-epi-php.c
-index 19df2ad..407f499 100644
 --- a/ext/xmlrpc/xmlrpc-epi-php.c
 +++ b/ext/xmlrpc/xmlrpc-epi-php.c
-@@ -701,7 +701,7 @@ PHP_FUNCTION(xmlrpc_encode_request)
+@@ -701,11 +701,7 @@ PHP_FUNCTION(xmlrpc_encode_request)
  			outBuf = XMLRPC_REQUEST_ToXML(xRequest, 0);
  			if (outBuf) {
  				RETVAL_STRING(outBuf);
+-#ifdef HAVE_XMLRPC_BUNDLED
 -				efree(outBuf);
-+				free(outBuf);
+-#else
+ 				free(outBuf);
+-#endif
  			}
  			XMLRPC_RequestFree(xRequest, 1);
  		}
-@@ -735,7 +735,7 @@ PHP_FUNCTION(xmlrpc_encode)
+@@ -739,11 +735,7 @@ PHP_FUNCTION(xmlrpc_encode)
  		if (xOut) {
  			if (outBuf) {
  				RETVAL_STRING(outBuf);
+-#ifdef HAVE_XMLRPC_BUNDLED
 -				efree(outBuf);
-+				free(outBuf);
+-#else
+ 				free(outBuf);
+-#endif
  			}
  			/* cleanup */
  			XMLRPC_CleanupValue(xOut);
-@@ -1102,7 +1102,7 @@ PHP_FUNCTION(xmlrpc_server_call_method)
+@@ -1110,11 +1102,7 @@ PHP_FUNCTION(xmlrpc_server_call_method)
  				outBuf = XMLRPC_REQUEST_ToXML(xResponse, &buf_len);
  				if (outBuf) {
  					RETVAL_STRINGL(outBuf, buf_len);
+-#ifdef HAVE_XMLRPC_BUNDLED
 -					efree(outBuf);
-+					free(outBuf);
+-#else
+ 					free(outBuf);
+-#endif
  				}
  				/* cleanup after ourselves.  what a sty! */
  				XMLRPC_RequestFree(xResponse, 0);

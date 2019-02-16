@@ -184,7 +184,7 @@ static void zend_signal_handler(int signo, siginfo_t *siginfo, void *context)
 	if (NULL == TSRMLS_CACHE || NULL == TSRMG_BULK_STATIC(zend_signal_globals_id, zend_signal_globals_t *)) {
 		p_sig.flags = 0;
 		p_sig.handler = SIG_DFL;
-	} else 
+	} else
 #endif
 	p_sig = SIGG(handlers)[signo-1];
 
@@ -399,7 +399,7 @@ void zend_signal_init(void) /* {{{ */
 
 /* {{{ zend_signal_startup
  * alloc zend signal globals */
-void zend_signal_startup(void)
+ZEND_API void zend_signal_startup(void)
 {
 
 #ifdef ZTS

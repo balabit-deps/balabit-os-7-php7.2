@@ -1278,7 +1278,7 @@ static void zend_mark_function_as_generator() /* {{{ */
 
 		if (ZEND_TYPE_CODE(return_info.type) != IS_ITERABLE) {
 			const char *msg = "Generators may only declare a return type of Generator, Iterator, Traversable, or iterable, %s is not permitted";
-			
+
 			if (!ZEND_TYPE_IS_CLASS(return_info.type)) {
 				zend_error_noreturn(E_COMPILE_ERROR, msg, zend_get_type_by_const(ZEND_TYPE_CODE(return_info.type)));
 			}
@@ -1494,6 +1494,7 @@ static void zend_ensure_valid_class_fetch_type(uint32_t fetch_type) /* {{{ */
 static zend_bool zend_try_compile_const_expr_resolve_class_name(zval *zv, zend_ast *class_ast, zend_ast *name_ast, zend_bool constant) /* {{{ */
 {
 	uint32_t fetch_type;
+	zval *class_name;
 
 	if (name_ast->kind != ZEND_AST_ZVAL) {
 		return 0;
@@ -1508,12 +1509,18 @@ static zend_bool zend_try_compile_const_expr_resolve_class_name(zval *zv, zend_a
 			"Dynamic class names are not allowed in compile-time ::class fetch");
 	}
 
-	fetch_type = zend_get_class_fetch_type(zend_ast_get_str(class_ast));
+	class_name = zend_ast_get_zval(class_ast);
+
+	if (Z_TYPE_P(class_name) != IS_STRING) {
+		zend_error_noreturn(E_COMPILE_ERROR, "Illegal class name");
+	}
+
+	fetch_type = zend_get_class_fetch_type(Z_STR_P(class_name));
 	zend_ensure_valid_class_fetch_type(fetch_type);
 
 	switch (fetch_type) {
 		case ZEND_FETCH_CLASS_SELF:
-			if (constant || (CG(active_class_entry) && zend_is_scope_known())) {
+			if (CG(active_class_entry) && zend_is_scope_known()) {
 				ZVAL_STR_COPY(zv, CG(active_class_entry)->name);
 			} else {
 				ZVAL_NULL(zv);
@@ -1947,7 +1954,7 @@ ZEND_API size_t zend_dirname(char *path, size_t len)
 static void zend_adjust_for_fetch_type(zend_op *opline, uint32_t type) /* {{{ */
 {
 	zend_uchar factor = (opline->opcode == ZEND_FETCH_STATIC_PROP_R) ? 1 : 3;
-	
+
 	if (opline->opcode == ZEND_FETCH_THIS) {
 		return;
 	}
@@ -2185,7 +2192,7 @@ static void zend_emit_tick(void) /* {{{ */
 	if (CG(active_op_array)->last && CG(active_op_array)->opcodes[CG(active_op_array)->last - 1].opcode == ZEND_TICKS) {
 		return;
 	}
-	
+
 	opline = get_next_op(CG(active_op_array));
 
 	opline->opcode = ZEND_TICKS;
@@ -2612,7 +2619,7 @@ static zend_op *zend_compile_simple_var_no_cv(znode *result, zend_ast *ast, uint
 		opline = zend_emit_op(result, ZEND_FETCH_R, &name_node, NULL);
 	}
 
-	if (name_node.op_type == IS_CONST && 
+	if (name_node.op_type == IS_CONST &&
 	    zend_is_auto_global(Z_STR(name_node.u.constant))) {
 
 		opline->extended_value = ZEND_FETCH_GLOBAL;
@@ -3623,7 +3630,7 @@ int zend_compile_func_cuf(znode *result, zend_ast_list *args, zend_string *lcnam
 }
 /* }}} */
 
-static int zend_compile_assert(znode *result, zend_ast_list *args, zend_string *name, zend_function *fbc) /* {{{ */
+static void zend_compile_assert(znode *result, zend_ast_list *args, zend_string *name, zend_function *fbc) /* {{{ */
 {
 	if (EG(assertions) >= 0) {
 		znode name_node;
@@ -3666,8 +3673,6 @@ static int zend_compile_assert(znode *result, zend_ast_list *args, zend_string *
 		result->op_type = IS_CONST;
 		ZVAL_TRUE(&result->u.constant);
 	}
-
-	return SUCCESS;
 }
 /* }}} */
 
@@ -3875,10 +3880,6 @@ int zend_try_compile_special_func(znode *result, zend_string *lcname, zend_ast_l
 		return FAILURE;
 	}
 
-	if (zend_string_equals_literal(lcname, "assert")) {
-		return zend_compile_assert(result, args, lcname, fbc);
-	}
-
 	if (CG(compiler_options) & ZEND_COMPILE_NO_BUILTINS) {
 		return FAILURE;
 	}
@@ -3981,8 +3982,16 @@ void zend_compile_call(znode *result, zend_ast *ast, uint32_t type) /* {{{ */
 		zend_op *opline;
 
 		lcname = zend_string_tolower(Z_STR_P(name));
-
 		fbc = zend_hash_find_ptr(CG(function_table), lcname);
+
+		/* Special assert() handling should apply independently of compiler flags. */
+		if (fbc && zend_string_equals_literal(lcname, "assert")) {
+			zend_compile_assert(result, zend_ast_get_list(args_ast), lcname, fbc);
+			zend_string_release(lcname);
+			zval_ptr_dtor(&name_node.u.constant);
+			return;
+		}
+
 		if (!fbc
 		 || (fbc->type == ZEND_INTERNAL_FUNCTION && (CG(compiler_options) & ZEND_COMPILE_IGNORE_INTERNAL_FUNCTIONS))
 		 || (fbc->type == ZEND_USER_FUNCTION && (CG(compiler_options) & ZEND_COMPILE_IGNORE_USER_FUNCTIONS))
@@ -4127,6 +4136,14 @@ void zend_compile_static_call(znode *result, zend_ast *ast, uint32_t type) /* {{
 		if (ce) {
 			zend_string *lcname = Z_STR_P(CT_CONSTANT(opline->op2) + 1);
 			fbc = zend_hash_find_ptr(&ce->function_table, lcname);
+			if (fbc && !(fbc->common.fn_flags & ZEND_ACC_PUBLIC)) {
+				if (ce != CG(active_class_entry)
+				 &&((fbc->common.fn_flags & ZEND_ACC_PRIVATE)
+				  || !zend_check_protected(zend_get_function_root_class(fbc), CG(active_class_entry)))) {
+					/* incompatibe function */
+					fbc = NULL;
+				}
+			}
 		}
 	}
 
@@ -4797,6 +4814,10 @@ void zend_compile_foreach(zend_ast *ast) /* {{{ */
 
 	zend_compile_stmt(stmt_ast);
 
+	/* Place JMP and FE_FREE on the line where foreach starts. It would be
+	 * better to use the end line, but this information is not available
+	 * currently. */
+	CG(zend_lineno) = ast->lineno;
 	zend_emit_jump(opnum_fetch);
 
 	opline = &CG(active_op_array)->opcodes[opnum_reset];
@@ -4895,6 +4916,10 @@ static zend_uchar determine_switch_jumptable_type(zend_ast_list *cases) {
 }
 
 static zend_bool should_use_jumptable(zend_ast_list *cases, zend_uchar jumptable_type) {
+	if (CG(compiler_options) & ZEND_COMPILE_NO_JUMPTABLES) {
+		return 0;
+	}
+
 	/* Thresholds are chosen based on when the average switch time for equidistributed
 	 * input becomes smaller when using the jumptable optimization. */
 	if (jumptable_type == IS_LONG) {
@@ -4968,7 +4993,7 @@ void zend_compile_switch(zend_ast *ast) /* {{{ */
 		} else if (expr_node.op_type == IS_CONST
 			&& Z_TYPE(expr_node.u.constant) == IS_TRUE) {
 			jmpnz_opnums[i] = zend_emit_cond_jump(ZEND_JMPNZ, &cond_node, 0);
-		} else {		    
+		} else {
 			opline = zend_emit_op(NULL, ZEND_CASE, &expr_node, &cond_node);
 			SET_NODE(opline->result, &case_node);
 			if (opline->op1_type == IS_CONST) {
@@ -4992,7 +5017,7 @@ void zend_compile_switch(zend_ast *ast) /* {{{ */
 			if (jumptable) {
 				zval *cond_zv = zend_ast_get_zval(cond_ast);
 				zval jmp_target;
-				ZVAL_LONG(&jmp_target, get_next_op_number(CG(active_op_array))); 
+				ZVAL_LONG(&jmp_target, get_next_op_number(CG(active_op_array)));
 
 				ZEND_ASSERT(Z_TYPE_P(cond_zv) == jumptable_type);
 				if (Z_TYPE_P(cond_zv) == IS_LONG) {
@@ -5166,7 +5191,7 @@ void zend_compile_try(zend_ast *ast) /* {{{ */
 	if (finally_ast) {
 		zend_loop_var discard_exception;
 		uint32_t opnum_jmp = get_next_op_number(CG(active_op_array)) + 1;
-		
+
 		/* Pop FAST_CALL from unwind stack */
 		zend_stack_del_top(&CG(loop_var_stack));
 
@@ -5417,7 +5442,7 @@ void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 	uint32_t i;
 	zend_op_array *op_array = CG(active_op_array);
 	zend_arg_info *arg_infos;
-	
+
 	if (return_type_ast) {
 		zend_bool allow_null = 0;
 
@@ -5560,7 +5585,7 @@ void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 									"with a float type can only be float, integer, or NULL");
 							}
 							break;
-						
+
 						case IS_ITERABLE:
 							if (Z_TYPE(default_node.u.constant) != IS_ARRAY) {
 								zend_error_noreturn(E_COMPILE_ERROR, "Default value for parameters "
@@ -5572,7 +5597,7 @@ void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 							zend_error_noreturn(E_COMPILE_ERROR, "Default value for parameters "
 								"with an object type can only be NULL");
 							break;
-							
+
 						default:
 							if (!ZEND_SAME_FAKE_TYPE(ZEND_TYPE_CODE(arg_info->type), Z_TYPE(default_node.u.constant))) {
 								zend_error_noreturn(E_COMPILE_ERROR, "Default value for parameters "
@@ -5605,7 +5630,7 @@ void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 			} else {
 				opline->op2.num = -1;
 			}
-		}	
+		}
 	}
 
 	/* These are assigned at the end to avoid unitialized memory in case of an error */
@@ -6908,6 +6933,7 @@ static inline void zend_ct_eval_greater(zval *result, zend_ast_kind kind, zval *
 static zend_bool zend_try_ct_eval_array(zval *result, zend_ast *ast) /* {{{ */
 {
 	zend_ast_list *list = zend_ast_get_list(ast);
+	zend_ast *last_elem_ast = NULL;
 	uint32_t i;
 	zend_bool is_constant = 1;
 
@@ -6920,6 +6946,10 @@ static zend_bool zend_try_ct_eval_array(zval *result, zend_ast *ast) /* {{{ */
 		zend_ast *elem_ast = list->child[i];
 
 		if (elem_ast == NULL) {
+			/* Report error at line of last non-empty element */
+			if (last_elem_ast) {
+				CG(zend_lineno) = zend_ast_get_lineno(last_elem_ast);
+			}
 			zend_error(E_COMPILE_ERROR, "Cannot use empty array elements in arrays");
 		}
 
@@ -6931,6 +6961,8 @@ static zend_bool zend_try_ct_eval_array(zval *result, zend_ast *ast) /* {{{ */
 		) {
 			is_constant = 0;
 		}
+
+		last_elem_ast = elem_ast;
 	}
 
 	if (!is_constant) {
@@ -7856,7 +7888,7 @@ static void zend_compile_encaps_list(znode *result, zend_ast *ast) /* {{{ */
 		i = ((j * sizeof(zend_string*)) + (sizeof(zval) - 1)) / sizeof(zval);
 		while (i > 1) {
 			get_temporary_variable(CG(active_op_array));
-			i--;			
+			i--;
 		}
 
 		zend_end_live_range(CG(active_op_array), range, opline - CG(active_op_array)->opcodes,
@@ -7990,9 +8022,7 @@ void zend_compile_const_expr_magic_const(zend_ast **ast_ptr) /* {{{ */
 	zend_ast *ast = *ast_ptr;
 
 	/* Other cases already resolved by constant folding */
-	ZEND_ASSERT(ast->attr == T_CLASS_C &&
-	            CG(active_class_entry) &&
-	            (CG(active_class_entry)->ce_flags & ZEND_ACC_TRAIT) != 0);
+	ZEND_ASSERT(ast->attr == T_CLASS_C);
 
 	{
 		zval const_zv;
