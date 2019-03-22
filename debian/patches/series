@@ -45,3 +45,9 @@
 0045-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
 0046-Fix-ext-date-lib-parse_tz-PATH_MAX-HURD-FTBFS.patch
 0047-Revert-libxmlrc-uses-system-malloc-instead-of-PHP-al.patch
+CVE-2019-9637.patch
+CVE-2019-9638-and-CVE-2019-9639-1.patch
+CVE-2019-9638-and-CVE-2019-9639-2.patch
+CVE-2019-9640.patch
+CVE-2019-9641.patch
+CVE-2019-9675.patch
