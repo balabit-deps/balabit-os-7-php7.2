@@ -1,3 +1,30 @@
+php7.2 (7.2.15-0ubuntu0.18.04.2) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Unauthorized users access
+    - debian/patches/CVE-2019-9637.patch: fix in
+      main/streams/plain_wrapper.c.
+    - CVE-2019-9637
+  * SECURITY UPDATE: Invalid read in exif_process_IFD_MAKERNOTE
+    - debian/patches/CVE-2019-9638-and-CVE-2019-9639-*.patch: fix in
+      ext/exif/exif.c, added tests in ext/exif/tests/bug77563.jpg,
+      ext/exif/tests/bug77563.phpt.
+    - CVE-2019-9638
+    - CVE-2019-9639
+  * SECURITY UPDATE: Invalid read
+    - debian/patches/CVE-2019-9640.patch: fix in
+      ext/exif/exif.c, added tests in ext/exif/tests/bug77540.jpg,
+      ext/exif/tests/bug77540.phpt.
+    - CVE-2019-9640
+  * SECURITY UPDATE: Unitialized read
+    - debian/patches/CVE-2019-9641.patch: fix in ext/exif/exif.c.
+    - CVE-2019-9641
+  * SECURITY UPDATE: Buffer overflow
+    - debian/patches/CVE-2019-9675.patch: fix in
+      ext/phar/tar.c, added tests in ext/phar/tests/bug71488.phpt,
+      ext/phar/tests/bug77586,phpt, ext/phar/tests/bug77586/files/*.
+
+ -- Leonidas S. Barbosa <leo.barbosa@canonical.com>  Fri, 22 Mar 2019 14:05:14 -0300
+
 php7.2 (7.2.15-0ubuntu0.18.04.1bb1) bionic; urgency=medium
 
   * Balabit patched version
