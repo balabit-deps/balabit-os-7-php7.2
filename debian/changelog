@@ -1,3 +1,20 @@
+php7.2 (7.2.17-0ubuntu0.18.04.1) bionic-security; urgency=medium
+
+  * Updated to 7.2.17 to fix multiple security issues.
+    - CVE-2019-11034
+    - CVE-2019-11035
+  * Refreshed patches:
+    - debian/patches/0013-Add-support-for-use-of-the-system-timezone-database.patch
+  * Removed patches included in new version:
+    - debian/patches/CVE-2019-9637.patch
+    - debian/patches/CVE-2019-9638-and-CVE-2019-9639-1.patch
+    - debian/patches/CVE-2019-9638-and-CVE-2019-9639-2.patch
+    - debian/patches/CVE-2019-9640.patch
+    - debian/patches/CVE-2019-9641.patch
+    - debian/patches/CVE-2019-9675.patch
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Thu, 18 Apr 2019 10:12:38 -0400
+
 php7.2 (7.2.15-0ubuntu0.18.04.2) bionic-security; urgency=medium
 
   * SECURITY UPDATE: Unauthorized users access
