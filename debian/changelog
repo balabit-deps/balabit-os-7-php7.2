@@ -1,3 +1,9 @@
+php7.2 (7.2.17-0ubuntu0.18.04.1bb1) bionic; urgency=medium
+
+  * Balabit patched version
+
+ -- Balabit Platform Team <devnull@dev.null>  Sat, 27 Apr 2019 02:30:31 +0000
+
 php7.2 (7.2.17-0ubuntu0.18.04.1) bionic-security; urgency=medium
 
   * Updated to 7.2.17 to fix multiple security issues.
