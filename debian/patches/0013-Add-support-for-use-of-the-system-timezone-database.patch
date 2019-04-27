@@ -1,6 +1,9 @@
-From: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
-Date: Thu, 31 Aug 2017 13:59:58 +0200
+From: Debian PHP Maintainers <team+pkg-php@tracker.debian.org>
+Date: Thu, 7 Mar 2019 19:36:30 +0000
 Subject: Add-support-for-use-of-the-system-timezone-database
+
+# License: MIT
+# http://opensource.org/licenses/MIT
 
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -9,6 +12,8 @@ Add support for use of the system timezone database, rather
 than embedding a copy.  Discussed upstream but was not desired.
 
 History:
+r17: adapt for autotool change in 7.2.16RC1
+r16: adapt for timelib 2017.06 (in 7.2.3RC1)
 r15: adapt for timelib 2017.05beta7 (in 7.2.0RC1)
 r14: improve check for valid tz file
 r13: adapt for upstream changes to use PHP allocator
@@ -30,12 +35,36 @@ r3: fix a crash if /usr/share/zoneinfo doesn't exist (Raphael Geissert)
 r2: add filesystem trawl to set up name alias index
 r1: initial revision
 ---
+ ext/date/config0.m4     |  13 ++
  ext/date/lib/parse_tz.c | 536 +++++++++++++++++++++++++++++++++++++++++++++++-
- ext/date/lib/timelib.m4 |  13 ++
  2 files changed, 546 insertions(+), 3 deletions(-)
 
+diff --git a/ext/date/config0.m4 b/ext/date/config0.m4
+index e464156..00dae8b 100644
+--- a/ext/date/config0.m4
++++ b/ext/date/config0.m4
+@@ -10,6 +10,19 @@ io.h
+ dnl Check for strtoll, atoll
+ AC_CHECK_FUNCS(strtoll atoll)
+ 
++PHP_ARG_WITH(system-tzdata, for use of system timezone data,
++[  --with-system-tzdata[=DIR]      to specify use of system timezone data],
++no, no)
++
++if test "$PHP_SYSTEM_TZDATA" != "no"; then
++   AC_DEFINE(HAVE_SYSTEM_TZDATA, 1, [Define if system timezone data is used])
++
++   if test "$PHP_SYSTEM_TZDATA" != "yes"; then
++      AC_DEFINE_UNQUOTED(HAVE_SYSTEM_TZDATA_PREFIX, "$PHP_SYSTEM_TZDATA",
++                         [Define for location of system timezone data])
++   fi
++fi
++
+ PHP_DATE_CFLAGS="-I@ext_builddir@/lib -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 -DHAVE_TIMELIB_CONFIG_H=1"
+ timelib_sources="lib/astro.c lib/dow.c lib/parse_date.c lib/parse_tz.c
+                  lib/timelib.c lib/tm2unixtime.c lib/unixtime2tm.c lib/parse_iso_intervals.c lib/interval.c"
 diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index 960e528..efd40fe 100644
+index 960e528..501b09e 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -25,8 +25,21 @@
@@ -275,7 +304,7 @@ index 960e528..efd40fe 100644
 +    }
 +
 +    for (l = li[hash]; l; l = l->next) {
-+        if (strcasecmp(l->name, name) == 0)
++        if (timelib_strcasecmp(l->name, name) == 0)
 +            return l;
 +    }
 +
@@ -299,7 +328,7 @@ index 960e528..efd40fe 100644
 +{
 +        const timelib_tzdb_index_entry *alpha = first, *beta = second;
 +
-+        return strcasecmp(alpha->id, beta->id);
++        return timelib_strcasecmp(alpha->id, beta->id);
 +}
 +
 +
@@ -640,24 +669,3 @@ index 960e528..efd40fe 100644
  	} else {
  		*error_code = TIMELIB_ERROR_NO_SUCH_TIMEZONE;
  		tmp = NULL;
-diff --git a/ext/date/lib/timelib.m4 b/ext/date/lib/timelib.m4
-index e112380..de02ef5 100644
---- a/ext/date/lib/timelib.m4
-+++ b/ext/date/lib/timelib.m4
-@@ -81,3 +81,16 @@ io.h
- 
- dnl Check for strtoll, atoll
- AC_CHECK_FUNCS(strtoll atoll strftime gettimeofday)
-+
-+PHP_ARG_WITH(system-tzdata, for use of system timezone data,
-+[  --with-system-tzdata[=DIR]      to specify use of system timezone data],
-+no, no)
-+
-+if test "$PHP_SYSTEM_TZDATA" != "no"; then
-+   AC_DEFINE(HAVE_SYSTEM_TZDATA, 1, [Define if system timezone data is used])
-+
-+   if test "$PHP_SYSTEM_TZDATA" != "yes"; then
-+      AC_DEFINE_UNQUOTED(HAVE_SYSTEM_TZDATA_PREFIX, "$PHP_SYSTEM_TZDATA",
-+                         [Define for location of system timezone data])
-+   fi
-+fi
