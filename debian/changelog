@@ -1,3 +1,14 @@
+php7.2 (7.2.19-0ubuntu0.18.04.1) bionic-security; urgency=medium
+
+  * Updated to 7.2.19 to fix multiple security issues.
+    - CVE-2019-11036
+    - CVE-2019-11039
+    - CVE-2019-11040
+  * Refreshed patches:
+    - debian/patches/0039-hack-phpdbg-to-explicitly-link-with-libedit.patch
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Tue, 04 Jun 2019 10:48:12 -0400
+
 php7.2 (7.2.17-0ubuntu0.18.04.1) bionic-security; urgency=medium
 
   * Updated to 7.2.17 to fix multiple security issues.
