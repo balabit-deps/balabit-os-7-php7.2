@@ -3304,7 +3304,7 @@ static int exif_process_IFD_TAG(image_info_type *ImageInfo, char *dir_entry, cha
             offset_base is ImageInfo->file.list[sn].data-dir_offset
             dir_entry - offset_base is dir_offset+2+i*12
         */
-		if (byte_count > IFDlength || offset_val > IFDlength-byte_count || value_ptr < dir_entry || offset_val < (size_t)(dir_entry-offset_base)) {
+		if (byte_count > IFDlength || offset_val > IFDlength-byte_count || value_ptr < dir_entry || offset_val < (size_t)(dir_entry-offset_base) || dir_entry <= offset_base) {
 			/* It is important to check for IMAGE_FILETYPE_TIFF
 			 * JPEG does not use absolute pointers instead its pointers are
 			 * relative to the start of the TIFF header in APP1 section. */
@@ -3947,6 +3947,8 @@ static int exif_scan_thumbnail(image_info_type *ImageInfo)
 		if (c == 0xFF)
 			return FALSE;
 		marker = c;
+		if (pos>=ImageInfo->Thumbnail.size)
+			return FALSE;
 		length = php_jpg_get16(data+pos);
 		if (length > ImageInfo->Thumbnail.size || pos >= ImageInfo->Thumbnail.size - length) {
 			return FALSE;

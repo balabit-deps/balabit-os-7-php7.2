@@ -4203,22 +4203,10 @@ ZEND_METHOD(reflection_class, getMethod)
 /* }}} */
 
 /* {{{ _addmethod */
-static void _addmethod(zend_function *mptr, zend_class_entry *ce, zval *retval, zend_long filter, zval *obj)
+static void _addmethod(zend_function *mptr, zend_class_entry *ce, zval *retval, zend_long filter)
 {
-	zval method;
-	size_t len = ZSTR_LEN(mptr->common.function_name);
-	zend_function *closure;
 	if (mptr->common.fn_flags & filter) {
-		if (ce == zend_ce_closure && obj && (len == sizeof(ZEND_INVOKE_FUNC_NAME)-1)
-			&& memcmp(ZSTR_VAL(mptr->common.function_name), ZEND_INVOKE_FUNC_NAME, sizeof(ZEND_INVOKE_FUNC_NAME)-1) == 0
-			&& (closure = zend_get_closure_invoke_method(Z_OBJ_P(obj))) != NULL)
-		{
-			_fix_closure_prototype(closure);
-			mptr = closure;
-		}
-		/* don't assign closure_object since we only reflect the invoke handler
-		   method and not the closure definition itself, even if we have a
-		   closure */
+		zval method;
 		reflection_method_factory(ce, mptr, NULL, &method);
 		add_next_index_zval(retval, &method);
 	}
@@ -4232,9 +4220,8 @@ static int _addmethod_va(zval *el, int num_args, va_list args, zend_hash_key *ha
 	zend_class_entry *ce = *va_arg(args, zend_class_entry**);
 	zval *retval = va_arg(args, zval*);
 	long filter = va_arg(args, long);
-	zval *obj = va_arg(args, zval *);
 
-	_addmethod(mptr, ce, retval, filter, obj);
+	_addmethod(mptr, ce, retval, filter);
 	return ZEND_HASH_APPLY_KEEP;
 }
 /* }}} */
@@ -4246,28 +4233,39 @@ ZEND_METHOD(reflection_class, getMethods)
 	reflection_object *intern;
 	zend_class_entry *ce;
 	zend_long filter = 0;
-	int argc = ZEND_NUM_ARGS();
+	zend_bool filter_is_null = 1;
 
 	METHOD_NOTSTATIC(reflection_class_ptr);
-	if (argc) {
-		if (zend_parse_parameters(argc, "|l", &filter) == FAILURE) {
-			return;
-		}
-	} else {
-		/* No parameters given, default to "return all" */
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|l!", &filter, &filter_is_null) == FAILURE) {
+		return;
+	}
+
+	if (filter_is_null) {
 		filter = ZEND_ACC_PPP_MASK | ZEND_ACC_ABSTRACT | ZEND_ACC_FINAL | ZEND_ACC_STATIC;
 	}
 
 	GET_REFLECTION_OBJECT_PTR(ce);
 
 	array_init(return_value);
-	zend_hash_apply_with_arguments(&ce->function_table, (apply_func_args_t) _addmethod_va, 4, &ce, return_value, filter, intern->obj);
-	if (Z_TYPE(intern->obj) != IS_UNDEF && instanceof_function(ce, zend_ce_closure)) {
-		zend_function *closure = zend_get_closure_invoke_method(Z_OBJ(intern->obj));
+	zend_hash_apply_with_arguments(&ce->function_table, (apply_func_args_t) _addmethod_va, 4, &ce, return_value, filter);
+
+	if (instanceof_function(ce, zend_ce_closure)) {
+		zend_bool has_obj = Z_TYPE(intern->obj) != IS_UNDEF;
+		zval obj_tmp;
+		zend_object *obj;
+		if (!has_obj) {
+			object_init_ex(&obj_tmp, ce);
+			obj = Z_OBJ(obj_tmp);
+		} else {
+			obj = Z_OBJ(intern->obj);
+		}
+		zend_function *closure = zend_get_closure_invoke_method(obj);
 		if (closure) {
 			_fix_closure_prototype(closure);
-			_addmethod(closure, ce, return_value, filter, &intern->obj);
-			_free_function(closure);
+			_addmethod(closure, ce, return_value, filter);
+		}
+		if (!has_obj) {
+			zval_ptr_dtor(&obj_tmp);
 		}
 	}
 }
@@ -4442,15 +4440,14 @@ ZEND_METHOD(reflection_class, getProperties)
 	reflection_object *intern;
 	zend_class_entry *ce;
 	zend_long filter = 0;
-	int argc = ZEND_NUM_ARGS();
+	zend_bool filter_is_null = 1;
 
 	METHOD_NOTSTATIC(reflection_class_ptr);
-	if (argc) {
-		if (zend_parse_parameters(argc, "|l", &filter) == FAILURE) {
-			return;
-		}
-	} else {
-		/* No parameters given, default to "return all" */
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|l!", &filter, &filter_is_null) == FAILURE) {
+		return;
+	}
+	
+	if (filter_is_null) {
 		filter = ZEND_ACC_PPP_MASK | ZEND_ACC_STATIC;
 	}
 
@@ -4787,6 +4784,10 @@ ZEND_METHOD(reflection_class, newInstance)
 		for (i = 0; i < num_args; i++) {
 			zval_ptr_dtor(&params[i]);
 		}
+
+		if (EG(exception)) {
+			zend_object_store_ctor_failed(Z_OBJ_P(return_value));
+		}
 		if (ret == FAILURE) {
 			php_error_docref(NULL, E_WARNING, "Invocation of %s's constructor failed", ZSTR_VAL(ce->name));
 			zval_dtor(return_value);
@@ -4891,6 +4892,10 @@ ZEND_METHOD(reflection_class, newInstanceArgs)
 				zval_ptr_dtor(&params[i]);
 			}
 			efree(params);
+		}
+
+		if (EG(exception)) {
+			zend_object_store_ctor_failed(Z_OBJ_P(return_value));
 		}
 		if (ret == FAILURE) {
 			zval_ptr_dtor(&retval);
