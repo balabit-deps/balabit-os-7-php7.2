@@ -1,3 +1,18 @@
+php7.2 (7.2.19-0ubuntu0.18.04.2) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Heap-buffer-overflow
+    - debian/patches/CVE-2019-11041.patch: check Thumbnail.size in order
+      to avoid an overflow in ext/exif.exif.c and adding test to
+      ext/exif/tests/bug78222.phpt.
+    - CVE-2019-11041
+  * SECURITY UPDATE: Heap-buffer-overflow
+    - debian/patches/CVE-2019-11042.patch: check ByteCount in order to
+      avoid an overflow in ext/exif/exif.c and adding tests to
+      ext/exif/tests/bug78256.phpt.
+    - CVE-2019-11042
+
+ -- Leonidas S. Barbosa <leo.barbosa@canonical.com>  Mon, 12 Aug 2019 16:34:28 -0300
+
 php7.2 (7.2.19-0ubuntu0.18.04.1) bionic-security; urgency=medium
 
   * Updated to 7.2.19 to fix multiple security issues.
