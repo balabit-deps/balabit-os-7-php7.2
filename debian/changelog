@@ -1,3 +1,9 @@
+php7.2 (7.2.19-0ubuntu0.18.04.2bb1) bionic; urgency=medium
+
+  * Balabit patched version
+
+ -- Balabit Platform Team <devnull@dev.null>  Fri, 23 Aug 2019 16:38:19 +0200
+
 php7.2 (7.2.19-0ubuntu0.18.04.2) bionic-security; urgency=medium
 
   * SECURITY UPDATE: Heap-buffer-overflow
