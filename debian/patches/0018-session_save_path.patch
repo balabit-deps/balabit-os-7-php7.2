@@ -8,11 +8,11 @@ Subject: session_save_path
  php.ini-production    | 2 +-
  3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/ext/session/session.c b/ext/session/session.c
-index dd54e6f..165c357 100644
---- a/ext/session/session.c
-+++ b/ext/session/session.c
-@@ -790,7 +790,7 @@ static PHP_INI_MH(OnUpdateRfc1867Freq) /* {{{ */
+Index: php-7.2.24/ext/session/session.c
+===================================================================
+--- php-7.2.24.orig/ext/session/session.c	2019-10-28 08:05:32.788532613 -0400
++++ php-7.2.24/ext/session/session.c	2019-10-28 08:05:32.788532613 -0400
+@@ -790,7 +790,7 @@ static PHP_INI_MH(OnUpdateRfc1867Freq) /
  /* {{{ PHP_INI
   */
  PHP_INI_BEGIN()
@@ -21,11 +21,11 @@ index dd54e6f..165c357 100644
  	STD_PHP_INI_ENTRY("session.name",               "PHPSESSID", PHP_INI_ALL, OnUpdateName,          session_name,       php_ps_globals,    ps_globals)
  	PHP_INI_ENTRY("session.save_handler",           "files",     PHP_INI_ALL, OnUpdateSaveHandler)
  	STD_PHP_INI_BOOLEAN("session.auto_start",       "0",         PHP_INI_PERDIR, OnUpdateBool,       auto_start,         php_ps_globals,    ps_globals)
-diff --git a/php.ini-development b/php.ini-development
-index fd37fcb..640544e 100644
---- a/php.ini-development
-+++ b/php.ini-development
-@@ -1347,7 +1347,7 @@ session.save_handler = files
+Index: php-7.2.24/php.ini-development
+===================================================================
+--- php-7.2.24.orig/php.ini-development	2019-10-28 08:05:32.788532613 -0400
++++ php-7.2.24/php.ini-development	2019-10-28 08:05:32.788532613 -0400
+@@ -1367,7 +1367,7 @@ session.save_handler = files
  ; where MODE is the octal representation of the mode. Note that this
  ; does not overwrite the process's umask.
  ; http://php.net/session.save-path
@@ -34,11 +34,11 @@ index fd37fcb..640544e 100644
  
  ; Whether to use strict session mode.
  ; Strict session mode does not accept uninitialized session ID and regenerate
-diff --git a/php.ini-production b/php.ini-production
-index d3cd4ea..1b17845 100644
---- a/php.ini-production
-+++ b/php.ini-production
-@@ -1348,7 +1348,7 @@ session.save_handler = files
+Index: php-7.2.24/php.ini-production
+===================================================================
+--- php-7.2.24.orig/php.ini-production	2019-10-28 08:05:32.788532613 -0400
++++ php-7.2.24/php.ini-production	2019-10-28 08:05:32.788532613 -0400
+@@ -1363,7 +1363,7 @@ session.save_handler = files
  ; where MODE is the octal representation of the mode. Note that this
  ; does not overwrite the process's umask.
  ; http://php.net/session.save-path

@@ -6,11 +6,11 @@ Subject: php-fpm-sysconfdir
  sapi/fpm/fpm/fpm_conf.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sapi/fpm/fpm/fpm_conf.c b/sapi/fpm/fpm/fpm_conf.c
-index 8ab120a..c12b796 100644
---- a/sapi/fpm/fpm/fpm_conf.c
-+++ b/sapi/fpm/fpm/fpm_conf.c
-@@ -1705,7 +1705,7 @@ int fpm_conf_init_main(int test_conf, int force_daemon) /* {{{ */
+Index: php-7.2.24/sapi/fpm/fpm/fpm_conf.c
+===================================================================
+--- php-7.2.24.orig/sapi/fpm/fpm/fpm_conf.c	2019-10-28 08:05:37.632544944 -0400
++++ php-7.2.24/sapi/fpm/fpm/fpm_conf.c	2019-10-28 08:05:37.632544944 -0400
+@@ -1707,7 +1707,7 @@ int fpm_conf_init_main(int test_conf, in
  		char *tmp;
  
  		if (fpm_globals.prefix == NULL) {

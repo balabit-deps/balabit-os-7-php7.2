@@ -6,11 +6,11 @@ Subject: lp564920-fix-big-files
  main/streams/plain_wrapper.c | 8 +++++++-
  1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/main/streams/plain_wrapper.c b/main/streams/plain_wrapper.c
-index 9b36d00..eb35029 100644
---- a/main/streams/plain_wrapper.c
-+++ b/main/streams/plain_wrapper.c
-@@ -693,7 +693,13 @@ static int php_stdiop_set_option(php_stream *stream, int option, int value, void
+Index: php-7.2.24/main/streams/plain_wrapper.c
+===================================================================
+--- php-7.2.24.orig/main/streams/plain_wrapper.c	2019-10-28 08:05:40.556552397 -0400
++++ php-7.2.24/main/streams/plain_wrapper.c	2019-10-28 08:05:40.556552397 -0400
+@@ -693,7 +693,13 @@ static int php_stdiop_set_option(php_str
  
  				switch (value) {
  					case PHP_STREAM_MMAP_SUPPORTED:
@@ -24,4 +24,4 @@ index 9b36d00..eb35029 100644
 +						return PHP_STREAM_OPTION_RETURN_OK;
  
  					case PHP_STREAM_MMAP_MAP_RANGE:
- 						if(do_fstat(data, 1) != 0) {
+ 						if (do_fstat(data, 1) != 0) {

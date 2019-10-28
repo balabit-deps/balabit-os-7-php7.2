@@ -6,9 +6,11 @@ Subject: static_openssl
  acinclude.m4 | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/acinclude.m4
-+++ b/acinclude.m4
-@@ -2388,9 +2388,7 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
+Index: php-7.2.24/acinclude.m4
+===================================================================
+--- php-7.2.24.orig/acinclude.m4	2019-10-28 08:05:11.264478074 -0400
++++ php-7.2.24/acinclude.m4	2019-10-28 08:05:11.264478074 -0400
+@@ -2418,9 +2418,7 @@ AC_DEFUN([PHP_SETUP_OPENSSL],[
  
      PHP_ADD_INCLUDE($OPENSSL_INCDIR)
  
