@@ -1,3 +1,15 @@
+php7.2 (7.2.24-0ubuntu0.18.04.1) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: updated to 7.2.24 to fix security issue
+    - CVE-2019-11043
+  * Rebased patches:
+    - debian/patches/0022-lp564920-fix-big-files.patch
+  * Removed patches no longer required:
+    - debian/patches/CVE-2019-11041.patch
+    - debian/patches/CVE-2019-11042.patch
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Mon, 28 Oct 2019 08:07:07 -0400
+
 php7.2 (7.2.19-0ubuntu0.18.04.2bb1) bionic; urgency=medium
 
   * Balabit patched version

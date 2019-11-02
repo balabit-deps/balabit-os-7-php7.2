@@ -7,11 +7,11 @@ Subject: php-5.3.9-mysqlnd
  ext/pdo_mysql/pdo_mysql.c        | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/ext/mysqlnd/mysqlnd_connection.c b/ext/mysqlnd/mysqlnd_connection.c
-index ea3d1cb..df0b8c1 100644
---- a/ext/mysqlnd/mysqlnd_connection.c
-+++ b/ext/mysqlnd/mysqlnd_connection.c
-@@ -559,7 +559,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, get_scheme)(MYSQLND_CONN_DATA * conn, MYSQLND_
+Index: php-7.2.24/ext/mysqlnd/mysqlnd_connection.c
+===================================================================
+--- php-7.2.24.orig/ext/mysqlnd/mysqlnd_connection.c	2019-10-28 08:06:22.620660408 -0400
++++ php-7.2.24/ext/mysqlnd/mysqlnd_connection.c	2019-10-28 08:06:22.620660408 -0400
+@@ -564,7 +564,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, get_sc
  	if (hostname.l == sizeof("localhost") - 1 && !strncasecmp(hostname.s, "localhost", hostname.l)) {
  		DBG_INF_FMT("socket=%s", socket_or_pipe->s? socket_or_pipe->s:"n/a");
  		if (!socket_or_pipe->s) {
@@ -20,10 +20,10 @@ index ea3d1cb..df0b8c1 100644
  			socket_or_pipe->l = strlen(socket_or_pipe->s);
  		}
  		transport.l = mnd_sprintf(&transport.s, 0, "unix://%s", socket_or_pipe->s);
-diff --git a/ext/pdo_mysql/pdo_mysql.c b/ext/pdo_mysql/pdo_mysql.c
-index 94b825b..d8aa14b 100644
---- a/ext/pdo_mysql/pdo_mysql.c
-+++ b/ext/pdo_mysql/pdo_mysql.c
+Index: php-7.2.24/ext/pdo_mysql/pdo_mysql.c
+===================================================================
+--- php-7.2.24.orig/ext/pdo_mysql/pdo_mysql.c	2019-10-28 08:06:22.620660408 -0400
++++ php-7.2.24/ext/pdo_mysql/pdo_mysql.c	2019-10-28 08:06:22.620660408 -0400
 @@ -53,7 +53,7 @@ ZEND_DECLARE_MODULE_GLOBALS(pdo_mysql)
  #  define PDO_MYSQL_UNIX_ADDR PHP_MYSQL_UNIX_SOCK_ADDR
  # else

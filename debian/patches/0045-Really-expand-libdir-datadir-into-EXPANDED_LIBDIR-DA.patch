@@ -6,11 +6,11 @@ Subject: Really expand $libdir/$datadir into @EXPANDED_LIBDIR/DATADIR@
  configure.ac | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 6c6a385..57e84ac 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -1237,9 +1237,9 @@ EXPANDED_LOCALSTATEDIR=`eval echo $localstatedir`
+Index: php-7.2.24/configure.ac
+===================================================================
+--- php-7.2.24.orig/configure.ac	2019-10-28 08:06:52.696738502 -0400
++++ php-7.2.24/configure.ac	2019-10-28 08:06:52.696738502 -0400
+@@ -1265,9 +1265,9 @@ EXPANDED_LOCALSTATEDIR=`eval echo $local
  EXPANDED_BINDIR=`eval echo $bindir`
  EXPANDED_SBINDIR=`eval echo $sbindir`
  EXPANDED_MANDIR=`eval echo $mandir`
