@@ -6619,6 +6619,7 @@ void zend_compile_use(zend_ast *ast) /* {{{ */
 		}
 
 		zend_string_addref(old_name);
+		old_name = zend_new_interned_string(old_name);
 		if (!zend_hash_add_ptr(current_import, lookup_name, old_name)) {
 			zend_error_noreturn(E_COMPILE_ERROR, "Cannot use%s %s as %s because the name "
 				"is already in use", zend_get_use_type_str(type), ZSTR_VAL(old_name), ZSTR_VAL(new_name));
@@ -7675,6 +7676,9 @@ void zend_compile_const(znode *result, zend_ast *ast) /* {{{ */
 
 		while (last && last->kind == ZEND_AST_STMT_LIST) {
 			zend_ast_list *list = zend_ast_get_list(last);
+			if (list->children == 0) {
+				break;
+			}
 			last = list->child[list->children-1];
 		}
 		if (last && last->kind == ZEND_AST_HALT_COMPILER) {

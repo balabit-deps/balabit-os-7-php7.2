@@ -531,10 +531,6 @@ PHPAPI void _php_stream_fill_read_buffer(php_stream *stream, size_t size)
 		php_stream_bucket_brigade brig_in = { NULL, NULL }, brig_out = { NULL, NULL };
 		php_stream_bucket_brigade *brig_inp = &brig_in, *brig_outp = &brig_out, *brig_swap;
 
-		/* Invalidate the existing cache, otherwise reads can fail, see note in
-		   main/streams/filter.c::_php_stream_filter_append */
-		stream->writepos = stream->readpos = 0;
-
 		/* allocate a buffer for reading chunks */
 		chunk_buf = emalloc(stream->chunk_size);
 
@@ -1418,8 +1414,13 @@ PHPAPI zend_string *_php_stream_copy_to_mem(php_stream *src, size_t maxlen, int 
 			ptr += ret;
 		}
 		if (len) {
-			*ptr = '\0';
 			ZSTR_LEN(result) = len;
+			ZSTR_VAL(result)[len] = '\0';
+
+			/* Only truncate if the savings are large enough */
+			if (len < maxlen / 2) {
+				result = zend_string_truncate(result, len, persistent);
+			}
 		} else {
 			zend_string_free(result);
 			result = NULL;
