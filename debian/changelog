@@ -1,3 +1,27 @@
+php7.2 (7.2.24-0ubuntu0.18.04.2) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: silently truncates
+    a class after a null byte
+    - debian/patches/CVE-2019-11045.patch:  not accept
+      arbitrary strings in ext/spl/spl_directory.c,
+      ext/spl/tests/bug78863.phpt.
+    - CVE-2019-11045
+  * SECURITY UPDATE: Buffer underflow
+    - debian/patches/CVE-2019-11046.patch: not rely on `isdigit()`
+      to detect digits in ext/bcmath/libbcmath/src/str2num.c,
+      ext/bcmath/tests/bug78878.phpt.
+    - CVE-2019-11046
+  * SECURITY UPDATE: Heap-buffer-overflow
+    - debian/patches/CVE-2019-11047.patch: fix in ext/exif/exif.c,
+      ext/exif/tests/bug78910.phpt.
+    - CVE-2019-11047
+  * SECURITY UPDATE: Use-after-free
+    - debian/patches/CVE-2019-11050.patch: fix in
+      ext/exif/exif.c, ext/exif/tests/bug78793.phpt.
+    - CVE-2019-11050
+
+ -- Leonidas S. Barbosa <leo.barbosa@canonical.com>  Mon, 13 Jan 2020 15:39:59 -0300
+
 php7.2 (7.2.24-0ubuntu0.18.04.1bb1) bionic; urgency=medium
 
   * Balabit patched version
