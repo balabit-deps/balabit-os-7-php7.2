@@ -1,3 +1,18 @@
+php7.2 (7.2.24-0ubuntu0.18.04.3) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Out of bounds read
+    - debian/patches/CVE-2020-7059.patch: fix OOB read in
+      php_strip_tags_ex in ext/standard/string.c and added test
+      ext/standard/tests/file/bug79099.phpt.
+    - CVE-2020-7059
+  * SECURITY UPDATE: Buffer-overflow
+    - debian/patches/CVE-2020-7060.patch: fix adding a check function
+      is_in_cp950_pua in  ext/mbstring/libmbfl/filters/mbfilter_big5.c
+      and added test ext/mbstring/tests/bug79037.phpt.
+    - CVE-2020-7060
+
+ -- Leonidas S. Barbosa <leo.barbosa@canonical.com>  Tue, 11 Feb 2020 12:55:52 -0300
+
 php7.2 (7.2.24-0ubuntu0.18.04.2bb1) bionic; urgency=medium
 
   * Balabit patched version
