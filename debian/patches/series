@@ -51,3 +51,8 @@ CVE-2019-11047.patch
 CVE-2019-11050.patch
 CVE-2020-7059.patch
 CVE-2020-7060.patch
+CVE-2020-7062.patch
+CVE-2020-7063.patch
+CVE-2020-7064.patch
+CVE-2020-7066.patch
+Fix_test_bug79282.patch

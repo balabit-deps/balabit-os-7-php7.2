@@ -1,3 +1,28 @@
+php7.2 (7.2.24-0ubuntu0.18.04.4) bionic-security; urgency=medium
+
+  * SECURITY UDPATE: Null dereference pointer
+    - debian/patches/CVE-2020-7062.patch: avoid null dereference in
+      ext/session/session.c.
+    - CVE-2020-7062
+  * SECURITY UPDATE: Lax permissions on files added to tar with Phar
+    - debian/patches/CVE-2020-7063.patch: enforce correct permissions
+      for files add to tar with Phar in ext/phar/phar_object.c,
+      ext/phar/tests/bug79082.phpt, ext/phar/tests/test79082*.
+    - CVE-2020-7063
+  * SECURITY UPDATE: Read one byte of uninitialized memory
+    - debian/patches/CVE-2020-7064.patch: check length in
+      exif_process_TIFF_in_JPEG to avoid read uninitialized memory
+      ext/exif/exif.c, ext/exif/tests/bug79282.phpt.
+    - debian/patches/Fix_test_bug79282.patch: fix test in
+      ext/exif/tests/bug79282.phpt.
+    - CVE-2020-7064
+  * SECURITY UPDATE: Truncated url due \0
+    - debian/patches/CVE-2020-7066.patch: check for get_headers
+      not accepting \0 in ext/standard/url.c.
+    - CVE-2020-7066
+
+ -- Leonidas S. Barbosa <leo.barbosa@canonical.com>  Wed, 08 Apr 2020 12:45:57 -0300
+
 php7.2 (7.2.24-0ubuntu0.18.04.3) bionic-security; urgency=medium
 
   * SECURITY UPDATE: Out of bounds read
