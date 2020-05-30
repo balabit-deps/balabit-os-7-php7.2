@@ -1,3 +1,9 @@
+php7.2 (7.2.24-0ubuntu0.18.04.6bb1) bionic; urgency=medium
+
+  * Balabit patched version
+
+ -- Balabit Platform Team <devnull@dev.null>  Sat, 30 May 2020 04:24:28 +0200
+
 php7.2 (7.2.24-0ubuntu0.18.04.6) bionic-security; urgency=medium
 
   * SECURITY UPDATE: Denial of service through oversized memory allocated
