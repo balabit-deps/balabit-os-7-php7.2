@@ -1,3 +1,21 @@
+php7.2 (7.2.24-0ubuntu0.18.04.6) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Denial of service through oversized memory allocated
+    - debian/patches/CVE-2019-11048.patch: changes types int to size_t
+      in main/rfc1867.c.
+    - CVE-2019-11048
+
+ -- Leonidas S. Barbosa <leo.barbosa@canonical.com>  Tue, 26 May 2020 10:09:11 -0300
+
+php7.2 (7.2.24-0ubuntu0.18.04.5) bionic; urgency=medium
+
+  * libapache2-mod-php.postinst.extra: Disable other mod-php
+    versions. Fixes failure when upgrading from previous versions of
+    mod-php.
+   (LP: #1865218)
+
+ -- Bryce Harrington <bryce@canonical.com>  Sat, 25 Apr 2020 02:40:59 +0000
+
 php7.2 (7.2.24-0ubuntu0.18.04.4bb1) bionic; urgency=medium
 
   * Balabit patched version

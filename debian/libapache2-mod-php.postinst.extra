@@ -13,9 +13,14 @@ if [ -e /usr/share/apache2/apache2-maintscript-helper ]; then
 	fi
 
 	PHP_MODULE=$(a2query -m | sed -n 's/^\(php[\.0-9]*\) (enabled.*)/\1/p')
-        if [ -n "$PHP_MODULE" -a "$PHP_MODULE" != "php@PHP_VERSION@" ]; then
-	    apache2_msg "err" "$DPKG_MAINTSCRIPT_PACKAGE: $PHP_MODULE module already enabled, not enabling PHP @PHP_VERSION@"
-	    return 1
+	if [ -n "$PHP_MODULE" -a "$PHP_MODULE" != "php@PHP_VERSION@" ]; then
+	    local a2invoke_ret=0
+	    apache2_msg "info" "$DPKG_MAINTSCRIPT_PACKAGE: Disabling old $PHP_MODULE in favor of using PHP @PHP_VERSION@"
+	    apache2_invoke dismod $PHP_MODULE || a2invoke_ret=1
+	    if [ "${a2invoke_ret}" -ne 0 ]; then
+		apache2_msg "err" "$DPKG_MAINTSCRIPT_PACKAGE: (${a2invoke_ret}) failed to disable old $PHP_MODULE"
+		return 1
+	    fi
 	fi
 
 	mpm=$(a2query -M)
