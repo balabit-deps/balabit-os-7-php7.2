@@ -1,3 +1,18 @@
+php7.2 (7.2.24-0ubuntu0.18.04.7) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Incorrect encryption data
+    - debian/patches/CVE-2020-7069.patch: fix wrong ciphertext/tag
+      in AES-CCM encryption for a 12 bytes IV in ext/openssl/openssl.c,
+      ext/openssl/tests/cipher_tests.inc, ext/openssl/openssl_*_ccm.phpt.
+    - CVE-2020-7069
+  * SECURITY UPDATE: Possibly forge cookie
+    - debian/patches/CVE-2020-7070.patch: do not decode cookie names anymore
+      in main/php_variables.c, tests/basic/022.phpt, tests/basic/023.phpt,
+      tests/basic/bug79699.phpt.
+    - CVE-2020-7070
+
+ -- Leonidas S. Barbosa <leo.barbosa@canonical.com>  Wed, 07 Oct 2020 12:24:25 -0300
+
 php7.2 (7.2.24-0ubuntu0.18.04.6bb1) bionic; urgency=medium
 
   * Balabit patched version
