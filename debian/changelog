@@ -1,3 +1,45 @@
+php7.2 (7.2.24-0ubuntu0.18.04.8) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: crash or info disclosure via PHAR zip file
+    - debian/patches/CVE-2020-7068.patch: fix use after free in
+      ext/phar/zip.c.
+    - CVE-2020-7068
+  * SECURITY UPDATE: incorrect URL validation
+    - debian/patches/CVE-2020-7071-1.patch: make sure userinfo is valid
+      according to RFC 3986 in ext/filter/tests/bug77423.phpt,
+      ext/standard/url.c.
+    - debian/patches/CVE-2020-7071-2.patch: revert previous fix and use a
+      better one in ext/filter/logical_filters.c,
+      ext/filter/tests/bug77423.phpt, ext/standard/url.c.
+    - debian/patches/CVE-2020-7071-3.patch: remove unneeded function in
+      ext/standard/url.c.
+    - CVE-2020-7071
+  * SECURITY UPDATE: crash via malformed XML data in SOAP extension
+    - debian/patches/CVE-2021-21702-1.patch: check strings in
+      ext/soap/php_sdl.c, ext/soap/php_xml.c, ext/soap/tests/bug80672.phpt,
+      ext/soap/tests/bug80672.xml.
+    - debian/patches/CVE-2021-21702-2.patch: fix compiler warning in
+      ext/soap/php_sdl.c.
+    - CVE-2021-21702
+  * SECURITY UPDATE: multiple issues in the pdo_firebase module
+    - debian/patches/CVE-2021-21704-1.patch: prevent overflow in
+      ext/pdo_firebird/firebird_statement.c.
+    - debian/patches/CVE-2021-21704-2.patch: verify result_size in
+      ext/pdo_firebird/firebird_statement.c.
+    - debian/patches/CVE-2021-21704-3.patch: verify result_size in
+      ext/pdo_firebird/firebird_driver.c.
+    - debian/patches/CVE-2021-21704-4.patch: don't overflow stack in
+      ext/pdo_firebird/firebird_driver.c.
+    - CVE-2021-21704
+  * SECURITY UPDATE: SSRF bypass
+    - debian/patches/CVE-2021-21705.patch: check password in
+      ext/filter/logical_filters.c, ext/filter/tests/bug81122.phpt.
+    - debian/patches/CVE-2021-21705-2.patch: fix compiler warning in
+      ext/filter/logical_filters.c.
+    - CVE-2021-21705
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Mon, 05 Jul 2021 13:41:32 -0400
+
 php7.2 (7.2.24-0ubuntu0.18.04.7) bionic-security; urgency=medium
 
   * SECURITY UPDATE: Incorrect encryption data
