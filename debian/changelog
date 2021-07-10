@@ -1,3 +1,9 @@
+php7.2 (7.2.24-0ubuntu0.18.04.8bb1) bionic; urgency=medium
+
+  * Balabit patched version
+
+ -- Balabit Platform Team <devnull@dev.null>  Sat, 10 Jul 2021 04:27:27 +0200
+
 php7.2 (7.2.24-0ubuntu0.18.04.8) bionic-security; urgency=medium
 
   * SECURITY UPDATE: crash or info disclosure via PHAR zip file
